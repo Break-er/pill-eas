@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "860482411414",
+    "project_id": "pill-ease",
+    "storage_bucket": "pill-ease.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860482411414:android:3af866c49a51a7c6bf9bb7",
+        "android_client_info": {
+          "package_name": "com.pillease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860482411414-1hq7l043kj0t74nae2gkbs0bsg01sp7t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pillease",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "860482411414-7rm39ranaor3lnk54icg82u52mh5j811.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pillease",
+            "certificate_hash": "94ba4b51f2e34e826a4955ec5f939b60a3a2f6b4"
+          }
+        },
+        {
+          "client_id": "860482411414-jkjpsfm0vqumrqsqkjue98e62stb3soj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvvhwOoXLqNKzyi5nfedOgLAqsrSg3QGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860482411414-jkjpsfm0vqumrqsqkjue98e62stb3soj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

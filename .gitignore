@@ -60,4 +60,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-google-services.json
+# google-services.json
+
+/android/local.properties
