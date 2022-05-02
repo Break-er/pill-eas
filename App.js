@@ -6,12 +6,15 @@
  * @flow strict-local
  */
 
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import {Text, View} from 'react-native';
-import Home from './src/screens/Home/Home';
+import {Text, View, StyleSheet, BackHandler, Alert} from 'react-native';
+import MainScreen from './src/screens/Main/Main';
+import SettingsScreen from './src/screens/Settings/Settings';
 import SplashScreen from 'react-native-splash-screen';
 import BottomNav from './src/components/BottomNav/BottomNav';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const theme = {
   ...DefaultTheme,
@@ -23,6 +26,8 @@ const theme = {
 };
 
 const App = () => {
+  const Stack = createNativeStackNavigator();
+
   useEffect(() => {
     try {
       setTimeout(() => {
@@ -35,7 +40,25 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
-      <BottomNav />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="BottomNav">
+          <Stack.Screen
+            name="BottomNav"
+            component={BottomNav}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </PaperProvider>
   );
 };
