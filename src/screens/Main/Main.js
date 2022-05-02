@@ -3,7 +3,7 @@ import {TouchableOpacity, View, StyleSheet} from 'react-native';
 import {IconButton, Surface, Text, Menu, Button} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-function Home({navigation}) {
+function Main({navigation}) {
   const [visible, setVisible] = React.useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -36,8 +36,8 @@ function Home({navigation}) {
               titleStyle={{fontSize: 15}}
             />
             <Menu.Item
-              onPress={() => {}}
-              title="로그아웃"
+              onPress={() => moveScreen('Login')}
+              title="로그인" // 로그아웃
               titleStyle={{fontSize: 15}}
             />
           </Menu>
@@ -145,4 +145,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Main;

@@ -8,9 +8,10 @@
 
 import React, {useState, useEffect} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import {Text, View, StyleSheet, BackHandler, Alert} from 'react-native';
+import {View} from 'react-native';
 import MainScreen from './src/screens/Main/Main';
 import SettingsScreen from './src/screens/Settings/Settings';
+import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
 import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
@@ -22,6 +23,19 @@ const theme = {
     ...DefaultTheme.colors,
     primary: '#85DEDC',
     accent: '#8AB5E6',
+  },
+};
+
+const navTheme = {
+  dark: false,
+  colors: {
+    primary: '#85DEDC',
+    // background: 'rgb(242, 242, 242)',
+    background: '#ffffff',
+    card: 'rgb(255, 255, 255)',
+    text: 'rgb(28, 28, 30)',
+    border: 'rgb(199, 199, 204)',
+    notification: 'rgb(255, 69, 58)',
   },
 };
 
@@ -40,7 +54,7 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer>
+      <NavigationContainer theme={navTheme}>
         <Stack.Navigator initialRouteName="BottomNav">
           <Stack.Screen
             name="BottomNav"
@@ -50,6 +64,11 @@ const App = () => {
           <Stack.Screen
             name="Main"
             component={MainScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
