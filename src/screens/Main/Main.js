@@ -4,44 +4,13 @@ import {IconButton, Surface, Text, Menu, Button} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function Main({navigation}) {
-  const [visible, setVisible] = React.useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
-
   const moveScreen = path => {
-    if (path === 'Settings') closeMenu();
-    navigation.navigate(path);
+    navigation.navigate('BottomNav', {screen: path});
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.main_header}>
-        <View style={styles.settings_icon}>
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-              <IconButton
-                icon={{
-                  uri: 'https://i.postimg.cc/kghVWxRn/settings-outline.png',
-                }}
-                color="#808080"
-                size={25}
-                onPress={openMenu}
-              />
-            }>
-            <Menu.Item
-              onPress={() => moveScreen('Settings')}
-              title="환경설정"
-              titleStyle={{fontSize: 15}}
-            />
-            <Menu.Item
-              onPress={() => moveScreen('Login')}
-              title="로그인" // 로그아웃
-              titleStyle={{fontSize: 15}}
-            />
-          </Menu>
-        </View>
         <View style={styles.header_textbox}>
           <Text style={styles.header_title}>어떤 코너를</Text>
           <Text style={styles.header_title}>이용하시겠습니까?</Text>
@@ -107,10 +76,7 @@ const styles = StyleSheet.create({
     height: '40%',
     backgroundColor: '#85DEDC',
   },
-  settings_icon: {
-    marginTop: 10,
-    marginLeft: 360,
-  },
+
   header_textbox: {
     paddingTop: 120,
     paddingLeft: 20,

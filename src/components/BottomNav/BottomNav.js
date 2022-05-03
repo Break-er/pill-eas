@@ -1,11 +1,20 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Button} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../../screens/Home/Home';
 import MapScreen from '../../screens/Map/Map';
 
 function BottomNav({navigation}) {
+  function CalendarScreen() {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Calendar!</Text>
+      </View>
+    );
+  }
+
   function ListScreen() {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -14,13 +23,6 @@ function BottomNav({navigation}) {
     );
   }
 
-  function CalendarScreen() {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Calendar!</Text>
-      </View>
-    );
-  }
   const Tab = createBottomTabNavigator();
 
   return (
@@ -40,7 +42,6 @@ function BottomNav({navigation}) {
             iconName = focused ? 'ios-map' : 'ios-map-outline';
           }
 
-          // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#85DEDC',

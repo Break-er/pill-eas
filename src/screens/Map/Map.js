@@ -6,7 +6,10 @@ import TitleBar from '../../components/TitleBar/TitleBar';
 function Map() {
   return (
     <View style={styles.container}>
-      <TitleBar />
+      <TitleBar
+        title="내 주변 수거함"
+        subtitle="주변 폐의약품 수거 약국 및 수거함 위치를 안내합니다."
+      />
       <Text>Hello</Text>
     </View>
   );

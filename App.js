@@ -8,7 +8,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import {View} from 'react-native';
+import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
 import SettingsScreen from './src/screens/Settings/Settings';
 import LoginScreen from './src/screens/Login/Login';
@@ -55,26 +55,53 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={navTheme}>
-        <Stack.Navigator initialRouteName="BottomNav">
+        <Stack.Navigator initialRouteName="Main">
           <Stack.Screen
             name="BottomNav"
             component={BottomNav}
-            options={{headerShown: false}}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#fff',
+              },
+            }}
           />
           <Stack.Screen
             name="Main"
             component={MainScreen}
-            options={{headerShown: false}}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
           />
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{headerShown: false}}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
           />
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
-            options={{headerShown: false}}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
