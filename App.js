@@ -11,8 +11,12 @@ import {View} from 'react-native';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
+import AddMedicine from './src/screens/AddMedicine/AddMedicine';
 import SettingsScreen from './src/screens/Settings/Settings';
-import LoginScreen, {googleSigninConfigure, checkLoggedIn} from './src/screens/Login/Login';
+import LoginScreen, {
+  googleSigninConfigure,
+  checkLoggedIn,
+} from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
 import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
@@ -107,6 +111,18 @@ const App = () => {
                 headerShadowVisible: false,
               }}
             />
+            <Stack.Screen
+              name="AddMedicine"
+              component={AddMedicine}
+              options={{
+                headerTitle: '',
+                headerRight: () => <Header />,
+                headerStyle: {
+                  backgroundColor: '#ffffff',
+                },
+                headerShadowVisible: false,
+              }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
@@ -117,7 +133,7 @@ const App = () => {
     <View>
       <Login />
     </View>
-  )
+  );
 };
 
 export default App;
