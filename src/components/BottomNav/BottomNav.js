@@ -5,8 +5,8 @@ import {Button} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../../screens/Home/Home';
 import MapScreen from '../../screens/Map/Map';
-import CalendarScreen from '../../screens/Calendar/Calendar'
-import ListScreen from '../../screens/List/List'
+import CalendarScreen from '../../screens/MedicineCalendar/MedicineCalendar';
+import ListScreen from '../../screens/MedicineList/MedicineList';
 
 function BottomNav({navigation}) {
   const Tab = createBottomTabNavigator();

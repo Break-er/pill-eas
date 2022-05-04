@@ -1,12 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {
-  IconButton,
-  Provider as PaperProvider,
-  Menu,
-  Button,
-} from 'react-native-paper';
+import {Provider as PaperProvider, Menu, Button} from 'react-native-paper';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function Header() {
   const navigation = useNavigation();
@@ -24,12 +20,10 @@ function Header() {
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <IconButton
-            icon={{
-              uri: 'https://i.postimg.cc/kghVWxRn/settings-outline.png',
-            }}
-            color="#000"
+          <Ionicons
+            name="ios-settings-outline"
             size={20}
+            color="#0000000"
             onPress={openMenu}
           />
         }>
