@@ -6,61 +6,61 @@ import RNPickerSelect from 'react-native-picker-select';
 
 function AddMedicine() {
   const [medicineName, setMedicineName] = useState('');
-  const [medicineType, setMedicineType] = useState('');
+  const [medicineType, setMedicineType] = useState('pill');
   const [startOpen, setStartOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [startChecked, setStartChecked] = useState(false);
   const [endChecked, setEndChecked] = useState(false);
-  const [medicineCycle, setMedicineCycle] = useState();
-  const [medicineCount, setMedicineCount] = useState(0);
+  const [medicineCycle, setMedicineCycle] = useState(1);
+  const [medicineCount, setMedicineCount] = useState(1);
   const [timeOpen, setTimeOpen] = useState([]);
   const [periodicList, setPeriodicList] = useState([]);
   const [medicineMemo, setMedicineMemo] = useState();
 
   const types = [
     {label: '알약', value: 'pill'},
-    {label: '가루약', value: 'powdered medicine'},
+    {label: '가루약', value: 'powdered_medicine'},
     {label: '캡슐제', value: 'capsule'},
     {label: '물약', value: 'liquid_medicine'},
     {label: '구강분해필름', value: 'oral_decomposition_film'},
   ];
 
   const cycle = [
-    {label: '1일', value: '1'},
-    {label: '2일', value: '2'},
-    {label: '3일', value: '3'},
-    {label: '4일', value: '4'},
-    {label: '5일', value: '5'},
-    {label: '6일', value: '6'},
-    {label: '7일', value: '7'},
-    {label: '8일', value: '8'},
-    {label: '9일', value: '9'},
-    {label: '10일', value: '10'},
+    {label: '1일', value: 1},
+    {label: '2일', value: 2},
+    {label: '3일', value: 3},
+    {label: '4일', value: 4},
+    {label: '5일', value: 5},
+    {label: '6일', value: 6},
+    {label: '7일', value: 7},
+    {label: '8일', value: 8},
+    {label: '9일', value: 9},
+    {label: '10일', value: 10},
   ];
 
   const counts = [
-    {label: '1번', value: '1'},
-    {label: '2번', value: '2'},
-    {label: '3번', value: '3'},
-    {label: '4번', value: '4'},
-    {label: '5번', value: '5'},
-    {label: '6번', value: '6'},
-    {label: '7번', value: '7'},
-    {label: '8번', value: '8'},
-    {label: '9번', value: '9'},
-    {label: '10번', value: '10'},
-    {label: '11번', value: '11'},
-    {label: '12번', value: '12'},
-    {label: '13번', value: '13'},
-    {label: '14번', value: '14'},
-    {label: '15번', value: '15'},
-    {label: '16번', value: '16'},
-    {label: '17번', value: '17'},
-    {label: '18번', value: '18'},
-    {label: '19번', value: '19'},
-    {label: '20번', value: '20'},
+    {label: '1번', value: 1},
+    {label: '2번', value: 2},
+    {label: '3번', value: 3},
+    {label: '4번', value: 4},
+    {label: '5번', value: 5},
+    {label: '6번', value: 6},
+    {label: '7번', value: 7},
+    {label: '8번', value: 8},
+    {label: '9번', value: 9},
+    {label: '10번', value: 10},
+    {label: '11번', value: 11},
+    {label: '12번', value: 12},
+    {label: '13번', value: 13},
+    {label: '14번', value: 14},
+    {label: '15번', value: 15},
+    {label: '16번', value: 16},
+    {label: '17번', value: 17},
+    {label: '18번', value: 18},
+    {label: '19번', value: 19},
+    {label: '20번', value: 20},
   ];
 
   const getDateFormat = input_date => {
@@ -74,17 +74,14 @@ function AddMedicine() {
   };
 
   useEffect(() => {
-    console.log(medicineCount);
     if (medicineCount > 0) {
-      console.log(medicineCount);
       let tmp = Array.from({length: parseInt(medicineCount, 10)}, () => false);
       setTimeOpen(tmp);
       let tmp2 = [];
       for (var i = 0; i < medicineCount; i++) {
         tmp2.push(new Date());
       }
-      setPeriodicList(JSON.stringify(tmp2));
-      periodicList && console.log(periodicList);
+      setPeriodicList(tmp2);
     }
   }, [medicineCount]);
 
@@ -101,7 +98,17 @@ function AddMedicine() {
   };
 
   const onSubmit = () => {
-    console.log('저장');
+    const res = {
+      name: medicineName,
+      type: medicineType,
+      startDate: startDate,
+      endDate: endDate,
+      cycle: medicineCycle,
+      count: medicineCount,
+      periods: periodicList,
+      memo: medicineMemo,
+    };
+    console.log(res);
   };
 
   return (

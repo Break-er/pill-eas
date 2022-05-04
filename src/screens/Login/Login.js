@@ -1,43 +1,43 @@
 import React, {useState} from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
-import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
-//구글 로그인 기능 사용 위해 webClientId 가져오는 함수
-export const googleSigninConfigure = () => {
-  GoogleSignin.configure({
-    webClientId: 
-      '860482411414-jkjpsfm0vqumrqsqkjue98e62stb3soj.apps.googleusercontent.com',
-  })
-};
+function Login() {
+  //구글 로그인 기능 사용 위해 webClientId 가져오는 함수
+  const googleSigninConfigure = () => {
+    GoogleSignin.configure({
+      webClientId:
+        '860482411414-jkjpsfm0vqumrqsqkjue98e62stb3soj.apps.googleusercontent.com',
+    });
+  };
 
-//로그인하는 함수
-export const onGoogleButtonPress = async () => {
-  const { idToken } = await GoogleSignin.signIn();
-  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  return auth().signInWithCredential(googleCredential);
-};
+  //로그인하는 함수
+  const onGoogleButtonPress = async () => {
+    const {idToken} = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredential);
+  };
 
-//로그인 여부 확인하는 함수
-export const checkLoggedIn = () => { 
-  const [loggedIn, setLoggedIn] = useState(false);
+  //로그인 여부 확인하는 함수
+  const checkLoggedIn = () => {
+    const [loggedIn, setLoggedIn] = useState(false);
 
-  auth().onAuthStateChanged((user) => {
-    if (user) {
-      setLoggedIn(true)
-      console.log("Logged In")
-    }
-    else{
-      setLoggedIn(false)
-      console.log("Logged Out")
-    }
-  })
-  
-  return (loggedIn)
-};
+    auth().onAuthStateChanged(user => {
+      if (user) {
+        setLoggedIn(true);
+        console.log('Logged In');
+      } else {
+        setLoggedIn(false);
+        console.log('Logged Out');
+      }
+    });
 
-
-function Login({navigation}) {
+    return loggedIn;
+  };
   return (
     <View style={styles.container}>
       <Image
