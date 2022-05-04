@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { List, Searchbar, Button, Modal, Portal, Provider, FAB } from 'react-native-paper';
 
-function List() {
+function MedicineList() {
 
     const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default List
+export default MedicineList
