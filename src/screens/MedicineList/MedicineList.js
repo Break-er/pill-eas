@@ -9,8 +9,9 @@ import {
   Provider,
   FAB,
 } from 'react-native-paper';
+import TitleBar from '../../components/TitleBar/TitleBar';
 
-function MedicineList() {
+function MedicineList({navigation}) {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const onChangeSearch = query => setSearchQuery(query);
@@ -25,9 +26,17 @@ function MedicineList() {
   const hideModal = () => setVisible(false);
   const containerStyle = {backgroundColor: 'white', padding: 20};
 
+  const moveScreen = path => {
+    navigation.navigate(path);
+  };
+
   return (
     <View style={styles.container}>
       <View>
+        <TitleBar
+          title="복용 중 약 리스트"
+          subtitle="처방 받은 약을 입력하고, 복용 중인 약품을 확인합니다."
+        />
         <ScrollView>
           <List.Section>
             <Searchbar
@@ -162,7 +171,7 @@ function MedicineList() {
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => console.log('FAB Pressed')}
+        onPress={() => moveScreen('AddMedicine')}
       />
     </View>
   );
@@ -171,6 +180,8 @@ function MedicineList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
   },
 
   searchBar: {

@@ -11,13 +11,13 @@ import {View} from 'react-native';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
+import AddMedicine from './src/screens/AddMedicine/AddMedicine';
 import SettingsScreen from './src/screens/Settings/Settings';
-import LoginScreen, {googleSigninConfigure, checkLoggedIn} from './src/screens/Login/Login';
+import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
 import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Login from './src/screens/Login/Login';
 
 const theme = {
   ...DefaultTheme,
@@ -52,72 +52,75 @@ const App = () => {
     } catch (e) {
       console.log(e.message);
     }
-    googleSigninConfigure();
   });
 
-  if (checkLoggedIn()) {
-    return (
-      <PaperProvider theme={theme}>
-        <NavigationContainer theme={navTheme}>
-          <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen
-              name="BottomNav"
-              component={BottomNav}
-              options={{
-                headerTitle: '',
-                headerRight: () => <Header />,
-                headerStyle: {
-                  backgroundColor: '#fff',
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Main"
-              component={MainScreen}
-              options={{
-                headerTitle: '',
-                headerRight: () => <Header />,
-                headerStyle: {
-                  backgroundColor: '#85DEDC',
-                },
-                headerShadowVisible: false,
-              }}
-            />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerTitle: '',
-                headerRight: () => <Header />,
-                headerStyle: {
-                  backgroundColor: '#85DEDC',
-                },
-                headerShadowVisible: false,
-              }}
-            />
-            <Stack.Screen
-              name="Settings"
-              component={SettingsScreen}
-              options={{
-                headerTitle: '',
-                headerRight: () => <Header />,
-                headerStyle: {
-                  backgroundColor: '#85DEDC',
-                },
-                headerShadowVisible: false,
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
-    );
-  }
-
   return (
-    <View>
-      <Login />
-    </View>
-  )
+    <PaperProvider theme={theme}>
+      <NavigationContainer theme={navTheme}>
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen
+            name="BottomNav"
+            component={BottomNav}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#fff',
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainScreen}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#85DEDC',
+              },
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="AddMedicine"
+            component={AddMedicine}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#ffffff',
+              },
+              headerShadowVisible: false,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  );
 };
 
 export default App;
