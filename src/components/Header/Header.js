@@ -23,7 +23,7 @@ function Header() {
           <Ionicons
             name="ios-settings-outline"
             size={20}
-            color="#0000000"
+            color="#000000"
             onPress={openMenu}
           />
         }>
