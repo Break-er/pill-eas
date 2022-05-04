@@ -5,24 +5,10 @@ import {Button} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../../screens/Home/Home';
 import MapScreen from '../../screens/Map/Map';
+import CalendarScreen from '../../screens/Calendar/Calendar'
+import ListScreen from '../../screens/List/List'
 
 function BottomNav({navigation}) {
-  function CalendarScreen() {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Calendar!</Text>
-      </View>
-    );
-  }
-
-  function ListScreen() {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>List!</Text>
-      </View>
-    );
-  }
-
   const Tab = createBottomTabNavigator();
 
   return (
