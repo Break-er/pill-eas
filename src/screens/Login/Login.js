@@ -5,6 +5,7 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 function Login() {
   //구글 로그인 기능 사용 위해 webClientId 가져오는 함수
@@ -25,11 +26,23 @@ function Login() {
   //로그인 여부 확인하는 함수
   const checkLoggedIn = () => {
     const [loggedIn, setLoggedIn] = useState(false);
+    const userCollection = firestore().collection('Users');
 
     auth().onAuthStateChanged(user => {
       if (user) {
         setLoggedIn(true);
         console.log('Logged In');
+        let userDoc = null;
+        userDoc = userCollection.doc(user.uid).get()
+          .then((docSnapshot) => {
+            if (docSnapshot.exists) {
+              console.log("exist ID!");
+            }
+            else {
+              console.log("new ID");
+              userCollection.doc(user.uid).set({fillList : []});
+            }
+        });
       } else {
         setLoggedIn(false);
         console.log('Logged Out');
