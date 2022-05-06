@@ -1,7 +1,13 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, BackHandler} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 function Home() {
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.navigate('Main');
+  });
+
   return (
     <View style={styles.container}>
       <Text>Home!</Text>

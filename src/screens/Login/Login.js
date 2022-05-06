@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, View, StyleSheet, Image, Alert} from 'react-native';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 
-function Login() {
+function Login({route}) {
+  const {param} = route.params;
+  const navigation = useNavigation();
+
   //구글 로그인 기능 사용 위해 webClientId 가져오는 함수
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
@@ -19,34 +23,66 @@ function Login() {
   const onGoogleButtonPress = async () => {
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    return auth().signInWithCredential(googleCredential);
+    const res = auth().signInWithCredential(googleCredential);
+    if (checkLoggedIn) {
+      Alert.alert('로그인 되었습니다.');
+      navigation.navigate('Main');
+    } else {
+      Alert.alert('로그인에 실패하였습니다.');
+    }
+    return res;
   };
 
-  //로그인 여부 확인하는 함수
   const checkLoggedIn = () => {
-    const [loggedIn, setLoggedIn] = useState(false);
+    let loggedIn = false;
 
     auth().onAuthStateChanged(user => {
       if (user) {
-        setLoggedIn(true);
-        console.log('Logged In');
+        loggedIn = true;
       } else {
-        setLoggedIn(false);
-        console.log('Logged Out');
+        loggedIn = false;
       }
     });
 
     return loggedIn;
   };
+
+  useEffect(() => {
+    googleSigninConfigure();
+    let loggedIn = false;
+    auth().onAuthStateChanged(user => {
+      if (user) {
+        loggedIn = true;
+        console.log(user);
+      } else {
+        loggedIn = false;
+      }
+    });
+
+    if (!!param && param === 'logout') {
+      auth()
+        .signOut()
+        .then(() => {
+          Alert.alert('로그아웃 되었습니다.');
+          navigation.navigate('Main');
+        });
+    }
+  });
+
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo_image}
-        source={{
-          uri: 'https://i.postimg.cc/x1sZ12yq/1.png',
-        }}
-      />
-      <GoogleSigninButton onPress={() => onGoogleButtonPress()} />
+      <View style={{marginTop: -80}}>
+        <Image
+          source={require('../../assets/images/appname.png')}
+          style={styles.app_name_image}
+          resizeMode="contain"
+        />
+        <GoogleSigninButton
+          onPress={() => onGoogleButtonPress()}
+          style={styles.login_btn}
+          // color={GoogleSigninButton.Color.Dark}
+        />
+      </View>
     </View>
   );
 }
@@ -55,11 +91,14 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  logo_image: {
-    width: 100,
-    height: 120,
-    marginTop: 100,
+  app_name_image: {
+    width: 200,
+    marginLeft: 15,
+  },
+  login_btn: {
+    marginTop: 0,
   },
 });
 
