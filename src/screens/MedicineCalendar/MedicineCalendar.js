@@ -7,6 +7,19 @@ const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
 const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
 const workout = {key: 'workout', color: 'green'};
 
+let data = [];
+auth().onAuthStateChanged(user => {
+  const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
+  pillList.then(querySnapshot => {
+    querySnapshot.forEach(documentSnapshot => {
+      //console.log(documentSnapshot.data());
+      data.push(documentSnapshot.data());
+      console.log(data);
+    });
+  });
+});
+console.log(data);
+
 function MedicineCalendar() {
   return (
     <View style={styles.container}>
