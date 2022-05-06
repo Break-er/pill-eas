@@ -10,6 +10,21 @@ import {
   FAB,
 } from 'react-native-paper';
 import TitleBar from '../../components/TitleBar/TitleBar';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
+let data = [];
+auth().onAuthStateChanged(user => {
+  const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
+  pillList.then(querySnapshot => {
+    querySnapshot.forEach(documentSnapshot => {
+      //console.log(documentSnapshot.data());
+      data.push(documentSnapshot.data());
+      console.log(data);
+    });
+  });
+});
+console.log(data);
 
 function MedicineList({navigation}) {
   const [searchQuery, setSearchQuery] = React.useState('');
