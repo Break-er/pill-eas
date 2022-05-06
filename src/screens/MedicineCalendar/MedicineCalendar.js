@@ -1,161 +1,329 @@
-import React from 'react';
-import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import {Calendar, Agenda} from 'react-native-calendars';
-import {List} from 'react-native-paper';
-
-const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
-const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
-const workout = {key: 'workout', color: 'green'};
-
-let data = [];
-auth().onAuthStateChanged(user => {
-  const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
-  pillList.then(querySnapshot => {
-    querySnapshot.forEach(documentSnapshot => {
-      //console.log(documentSnapshot.data());
-      data.push(documentSnapshot.data());
-      console.log(data);
-    });
-  });
-});
-console.log(data);
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import TitleBar from '../../components/TitleBar/TitleBar';
+import Swiper from 'react-native-swiper';
+import { Button } from 'react-native-paper';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 function MedicineCalendar() {
+
+  let data = [];
+
+  // console.log(data);
+
+  const [periodState, setPeriodState] = useState({});
+  const [currentDate, setCurrentDate] = useState('');
+  const [usingData, setUsingData] = useState([]);
+
+  let dateArr = [];
+  let startDate = ''
+  let endDate = ''
+  let duringDate = []
+  let todayDate = '';
+  const monthDate = [31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const pickColor = ["#8AB5E6", "#85DEDC", "#8EDAAB", "#FAB7E3", "#E6BBFA", "#FAF1AC"]
+
+  useEffect(() => {
+    auth().onAuthStateChanged(user => {
+      const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
+      pillList.then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+          //console.log(documentSnapshot.data());
+          data.push(documentSnapshot.data());
+        });
+      })
+        .then(() => {
+          let today = new Date();
+          let year = today.getFullYear(); // 년도
+          let month = today.getMonth() + 1;  // 월
+          let date = today.getDate();  // 날짜
+          todayDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+
+          if (currentDate == todayDate) {
+            setCurrentDate(todayDate);
+          }
+
+          duringDate = calDuringDate();
+
+          let tempArr = []
+
+          for (let i = 0; i < data.length; i++) {
+
+            let tempStart = new Date(data[i].startDate.nanoseconds);
+            let tempYear_s = tempStart.getFullYear(); // 년도
+            let tempMonth_s = tempStart.getMonth() + 1;  // 월
+            let tempDate_s = tempStart.getDate();  // 날짜
+            let parsingDate_s = `${tempYear_s}-${tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s}-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
+
+            let tempEnd = new Date(data[i].endDate.nanoseconds);
+            let tempYear_e = tempEnd.getFullYear(); // 년도
+            let tempMonth_e = tempEnd.getMonth() + 1;  // 월
+            let tempDate_e = tempEnd.getDate();  // 날짜
+            let parsingDate_e = `${tempYear_e}-${tempMonth_e >= 10 ? tempMonth_e : '0' + tempMonth_e}-${tempDate_e >= 10 ? tempDate_e : '0' + tempDate_e}`;
+            
+            const tempData = {
+              name: data[i].name,
+              start: parsingDate_s,
+              end: parsingDate_e,
+            }
+            tempArr.push(tempData)
+          }
+
+          setUsingData(tempArr);
+
+          console.log(usingData)
+        });
+    });
+
+
+  }, [])
+
+  function clickList(idx) {
+    startDate = usingData[idx].start;
+    endDate = usingData[idx].end;
+    console.log(usingData[idx])
+    setCurrentDate(startDate);
+
+    duringDate = calDuringDate();
+    makingPeriods();
+  }
+
+  function clearPeriods() {
+    startDate = '';
+    endDate = '';
+    duringDate = [];
+    setCurrentDate('');
+    setPeriodState({});
+  }
+
+  function calDuringDate() {
+
+    var tempStartDate = new Date(startDate);
+    var tempEndDate = new Date(endDate);
+
+    if (tempStartDate.getMonth() + 1 !== tempEndDate.getMonth() + 1) {
+
+      let calDate = tempStartDate
+
+      let currentStartMonth = tempStartDate.getMonth() + 1;
+      let currentEndMonth = tempEndDate.getMonth() + 1;
+
+      for (let i = currentStartMonth; i <= currentEndMonth; i++) {
+
+        if (currentStartMonth === i) {
+
+
+          for (let j = tempStartDate.getDate() + 1; j <= monthDate[i - 1]; j++) {
+
+            calDate.setDate(j);
+
+            const year = calDate.getFullYear();
+            const month = i;
+            const date = calDate.getDate();
+
+            let stringDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+
+            dateArr.push(stringDate);
+          }
+        }
+        else if (currentEndMonth === i) {
+
+
+          calDate.setMonth(i);
+
+          for (let k = 1; k <= tempEndDate.getDate() - 1; k++) {
+
+            calDate.setDate(k);
+
+            const year = calDate.getFullYear();
+            const month = i
+            const date = calDate.getDate();
+
+            let stringDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+
+            dateArr.push(stringDate);
+          }
+        }
+        else if ((currentStartMonth !== i) && (currentEndMonth !== i)) {
+
+
+          calDate.setMonth(i);
+
+          for (let n = 1; n <= monthDate[i - 1]; n++) {
+
+            calDate.setDate(n);
+
+            const year = calDate.getFullYear();
+            const month = i;
+            const date = calDate.getDate();
+
+            let stringDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+
+            dateArr.push(stringDate);
+          }
+        }
+      }
+    }
+    else {
+      var x = 0;
+      var limit = tempEndDate.getDate() - tempStartDate.getDate();
+
+      while (x < limit - 1) {
+        let calDate = tempStartDate
+        calDate.setDate(calDate.getDate() + 1);
+
+        const year = calDate.getFullYear();
+        const month = calDate.getMonth() + 1;
+        const date = calDate.getDate();
+
+        let stringDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+
+        dateArr.push(stringDate);
+        x++;
+      }
+    }
+    return dateArr;
+  }
+
+  function makingPeriods() {
+
+    let markPeriods = {};
+
+    const randNum = Math.floor(Math.random() * 6);
+
+    new Promise((resolve, reject) => {
+
+      let addPeriods = null;
+
+      if (startDate !== undefined) {
+        // addPeriods = {
+        //   'temp': {
+        //     periods: [
+        //       { startingDay: null, endingDay: null, color: '' }
+        //     ]
+        //   }
+        // }
+        addPeriods = {
+          'temp': { startingDay: null, endingDay: null, color: '' }
+        }
+        const NEW_NAME = startDate;
+        const OLD_NAME = 'temp';
+        Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
+        delete addPeriods[OLD_NAME];
+        Object.assign(markPeriods, addPeriods);
+      }
+
+      if (duringDate !== undefined) {
+        for (let i = 0; i < duringDate.length; i++) {
+          // addPeriods = {
+          //   "temp": {
+          //     periods: [
+          //       { startingDay: null, endingDay: null, color: '' }
+          //     ]
+          //   }
+          // }
+          addPeriods = {
+            'temp': { startingDay: null, endingDay: null, color: '' }
+          }
+          const NEW_NAME = duringDate[i];
+          const OLD_NAME = "temp";
+          Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
+          delete addPeriods[OLD_NAME];
+          Object.assign(markPeriods, addPeriods);
+        }
+      }
+
+      if (endDate !== undefined) {
+        // addPeriods = {
+        //   "temp": {
+        //     periods: [
+        //       { startingDay: null, endingDay: null, color: '' },
+        //     ]
+        //   }
+        // }
+        addPeriods = {
+          'temp': { startingDay: null, endingDay: null, color: '' }
+        }
+
+        const NEW_NAME = endDate;
+        const OLD_NAME = "temp";
+        Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
+        delete addPeriods[OLD_NAME];
+        Object.assign(markPeriods, addPeriods);
+
+        // markPeriods[startDate]["periods"][0]["startingDay"] = true;
+        // markPeriods[startDate]["periods"][0]["endingDay"] = false;
+        // markPeriods[startDate]["periods"][0]["color"] = pickColor[randNum];
+
+        markPeriods[startDate]["startingDay"] = true;
+        markPeriods[startDate]["endingDay"] = false;
+        markPeriods[startDate]["color"] = pickColor[randNum];
+
+        for (let i = 0; i < duringDate.length; i++) {
+          // markPeriods[duringDate[i]]["periods"][0]["startingDay"] = false;
+          // markPeriods[duringDate[i]]["periods"][0]["endingDay"] = false;
+          // markPeriods[duringDate[i]]["periods"][0]["color"] = pickColor[randNum];
+
+          markPeriods[duringDate[i]]["startingDay"] = false;
+          markPeriods[duringDate[i]]["endingDay"] = false;
+          markPeriods[duringDate[i]]["color"] = pickColor[randNum];
+        }
+
+        // markPeriods[endDate]["periods"][0]["startingDay"] = false;
+        // markPeriods[endDate]["periods"][0]["endingDay"] = true;
+        // markPeriods[endDate]["periods"][0]["color"] = pickColor[randNum];
+
+        markPeriods[endDate]["startingDay"] = false;
+        markPeriods[endDate]["endingDay"] = true;
+        markPeriods[endDate]["color"] = pickColor[randNum];
+
+      }
+      resolve();
+    })
+      .then(() => {
+        setPeriodState(markPeriods);
+      })
+  }
+
   return (
     <View style={styles.container}>
-      {/* <Calendar
-        style={{}}
-        onDayPress={day => {
-            console.log('day pressed', day);
+      <View style={styles.titleBar}>
+        <TitleBar title="캘린더" subtitle="복용 중인 약의 기록을 확인합니다." />
+      </View>
+      <Calendar
+        current={currentDate}
+        maxDate={'2023-12-31'}
+        style={{ marginTop: -15 }}
+        onDayPress={(day) => {
+          console.log('day pressed', day);
         }}
-        onDayLongPress={day => {
-            console.log('selected day', day);
-        }}
+
         onMonthChange={month => {
-            console.log('month changed', month);
+          console.log('month changed', month);
         }}
+
         onPressArrowLeft={subtractMonth => subtractMonth()}
         onPressArrowRight={addMonth => addMonth()}
         enableSwipeMonths={true}
 
-        markingType={'multi-dot'}
-        markedDates={{
-          '2022-05-05': {dots: [vacation, massage, workout], selected: true, selectedColor: '#8AB5E6'},
-          '2022-05-07': {dots: [massage, workout]}
-        }}
-    />
-    <List.Section>
-        <ScrollView>
-            <List.Item title="감기약" left={() => <List.Icon color='#8AB5E6' icon="folder" />} />
-            <List.Item title="허리 디스크 약" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="우울증 약" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="두통약" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="여튼 아플 때 먹는 약" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="루테인" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="밀크씨슬" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="비타민 C" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="수면제" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="피로회복제" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-            <List.Item title="플라시보" left={() => <List.Icon color="#8AB5E6" icon="folder" />} />
-        </ScrollView>
-    </List.Section> */}
-      <Agenda
-        // The list of items that have to be displayed in agenda. If you want to render item as empty date
-        // the value of date key has to be an empty array []. If there exists no value for date key it is
-        // considered that the date in question is not yet loaded
-        items={{
-          '2022-05-01': [{name: '감기악'}],
-          '2022-05-02': [{name: '두통약'}],
-          '2022-05-04': [{name: '허리 디스크 약'}],
-        }}
-        // Callback that gets called when items for a certain month should be loaded (month became visible)
-        loadItemsForMonth={month => {
-          console.log('trigger items loading');
-        }}
-        // Callback that fires when the calendar is opened or closed
-        onCalendarToggled={calendarOpened => {
-          console.log(calendarOpened);
-        }}
-        // Callback that gets called on day press
-        onDayPress={day => {
-          // console.log('day pressed', day);
-        }}
-        // Callback that gets called when day changes while scrolling agenda list
-        onDayChange={day => {
-          console.log('day changed');
-        }}
-        // Initially selected day
-
-        // Max amount of months allowed to scroll to the past. Default = 50
-        pastScrollRange={50}
-        // Max amount of months allowed to scroll to the future. Default = 50
-        futureScrollRange={50}
-        // Specify how each item should be rendered in agenda
-        renderItem={(item, firstItemInDay) => {
-          return (
-            <View>
-              {/* <List.Section>
-                        <List.Item title={item['name']} left={() => <List.Icon color='#8AB5E6' icon="folder" />} />
-                </List.Section> */}
-              {/* <Text>{Object.keys(item)}</Text> */}
-            </View>
-          );
-        }}
-        // Specify how each date should be rendered. day can be undefined if the item is not first in that day
-        renderDay={(day, item) => {
-          // console.log('day :', day.getDate());
-          // console.log('item :', day.getTime());
-          // console.log('day_key :', Object.keys(day));
-          // console.log("day :", day.getDate(), typeof(day.getDate().toString()));
-
-          return (
-            <View>
-              <List.Section>
-                <List.Item
-                  title="아무말"
-                  left={() => <Text>{item['name']}</Text>}
-                  right={() => <Text>{day['name']}</Text>}
-                />
-              </List.Section>
-            </View>
-          );
-        }}
-        // Specify how empty date content with no items should be rendered
-        renderEmptyDate={() => {
-          return <View />;
-        }}
-        // Specify how agenda knob should look like
-        renderKnob={() => {
-          return <View />;
-        }}
-        // Specify what should be rendered instead of ActivityIndicator
-        renderEmptyData={() => {
-          return <View />;
-        }}
-        // Specify your item comparison function for increased performance
-        rowHasChanged={(r1, r2) => {
-          return r1.text !== r2.text;
-        }}
-        // Hide knob button. Default = false
-        // When `true` and `hideKnob` prop is `false`, the knob will always be visible and the user will be able to drag the knob up and close the calendar. Default = false
-        // By default, agenda dates are marked if they have at least one item, but you can override this if needed
-        markedDates={{}}
-        // If disabledByDefault={true} dates flagged as not disabled will be enabled. Default = false
-        // If provided, a standard RefreshControl will be added for "Pull to Refresh" functionality. Make sure to also set the refreshing prop correctly
-        onRefresh={() => console.log('refreshing...')}
-        // Set this true while waiting for new data from a refresh
-        refreshing={false}
-        // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView
-        // Agenda theme
-        theme={{
-          agendaDayTextColor: 'yellow',
-          agendaDayNumColor: 'green',
-          agendaTodayColor: 'red',
-          agendaKnobColor: 'blue',
-        }}
-        // Agenda container style
-        style={{}}
+        markingType={'period'}
+        markedDates={periodState}
       />
+
+      <Swiper style={styles.wrapper} showsButtons={false} showsPagination={true} onIndexChanged={index => { clearPeriods(); }} loop={false}>
+        {usingData && usingData.map((item, idx) => (
+          <View style={styles.slide} key={idx}>
+            <Button contentStyle={styles.listDesign} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
+              {item.name}
+            </Button>
+          </View>
+        ))}
+      </Swiper>
+
+
+
     </View>
   );
 }
@@ -163,7 +331,37 @@ function MedicineCalendar() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
   },
+
+  titleBar: {
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  wrapper: {
+    marginTop: -15,
+  },
+
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF'
+  },
+
+  listDesign: {
+    width: '100%',
+    height: 60,
+  },
+
+  listText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: -10,
+    marginLeft: -10,
+
+  }
 });
 
 export default MedicineCalendar;
