@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Platform, PermissionsAndroid} from 'react-native';
 import {Text} from 'react-native-paper';
 import TitleBar from '../../components/TitleBar/TitleBar';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from "react-native-geolocation-service";
 
 async function requestPermission() {
@@ -23,6 +23,19 @@ async function requestPermission() {
   }
 }
 
+// state = { reports: [] } 
+
+// nearbyMarkers = () => {
+//   return this.state.reports.map((report) =>
+//    <Marker
+//     key={report.id}
+//     coordinate={{latitude: report.lat, longitude: report.lon}}
+//     title={report.location}
+//     description={report.comments}
+//    >
+//    </Marker>)
+// } 
+
 function Map() {
   const [location, setLocation] = useState();
   useEffect(() => {
@@ -38,8 +51,8 @@ function Map() {
           },
           {
             enableHighAccuracy: true,
-            timeout: 3600,
-            maximumAge: 3600,
+            timeout: 15000,
+            maximumAge: 10000,
           },
         );
       }
@@ -55,13 +68,6 @@ function Map() {
   }
 
   return (
-//     <View style={styles.container}>
-//       <TitleBar
-//         title="내 주변 수거함"
-//         subtitle="주변 폐의약품 수거 약국 및 수거함 위치를 안내합니다."
-//       />
-//       <Text>Hello</Text>
-//     </View>
     <>
       <View style={{ flex: 1 }}>
         <MapView
@@ -75,8 +81,21 @@ function Map() {
           }}
           showsUserLocation={true}
           showsMyLocationButton={true}
-          
-        />
+          onRegionChange={region => {
+            setLocation({
+              latitude: region.latitude,
+              longitude: region.longitude,
+            });
+          }}
+          onRegionChangeComplete={region=> {
+            setLocation({
+              latitude: region.latitude,
+              longitude: region.longitude,
+            });
+          }}
+          >
+          {/* {this.nearbyMarkers()} */}
+        </MapView>
       </View>
     </>
   );
