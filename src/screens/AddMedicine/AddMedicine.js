@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {TextInput, Button, RadioButton} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import RNPickerSelect from 'react-native-picker-select';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 function AddMedicine() {
   const [medicineName, setMedicineName] = useState('');
@@ -108,7 +110,20 @@ function AddMedicine() {
       periods: periodicList,
       memo: medicineMemo,
     };
-    console.log(res);
+    let addPill = null;
+    auth().onAuthStateChanged(user => {
+      addPill = firestore().collection('Users').doc(user.uid).collection('pillList').doc(medicineName);
+      addPill.set({
+        name: medicineName,
+        type: medicineType,
+        startDate: startDate,
+        endDate: endDate,
+        cycle: medicineCycle,
+        count: medicineCount,
+        periods: periodicList,
+        memo: medicineMemo,
+      });
+    });
   };
 
   return (
