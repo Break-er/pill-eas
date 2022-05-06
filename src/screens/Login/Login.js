@@ -6,6 +6,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 function Login({route}) {
   const {param} = route.params;
@@ -24,6 +25,21 @@ function Login({route}) {
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     const res = auth().signInWithCredential(googleCredential);
+    const userCollection = firestore().collection('Users');
+
+    auth().onAuthStateChanged(user => {
+      let userDoc = null;
+      userDoc = userCollection.doc(user.uid).get()
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          console.log("exist!!");
+        }
+        else {
+          console.log("new");
+          userCollection.doc(user.uid).set({fillList : []});
+        }
+      });
+    });
     if (checkLoggedIn) {
       Alert.alert('로그인 되었습니다.');
       navigation.navigate('Main');
