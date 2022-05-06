@@ -7,6 +7,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 function AddMedicine() {
+  const today = new Date();
   const [medicineName, setMedicineName] = useState('');
   const [medicineType, setMedicineType] = useState('pill');
   const [startOpen, setStartOpen] = useState(false);
@@ -17,9 +18,27 @@ function AddMedicine() {
   const [endChecked, setEndChecked] = useState(false);
   const [medicineCycle, setMedicineCycle] = useState(1);
   const [medicineCount, setMedicineCount] = useState(1);
-  const [timeOpen, setTimeOpen] = useState([]);
-  const [periodicList, setPeriodicList] = useState([]);
-  const [medicineMemo, setMedicineMemo] = useState();
+  const [timeOpen, setTimeOpen] = useState(
+    Array.from({length: parseInt(20, 10)}, () => false),
+  );
+  const [periodicList, setPeriodicList] = useState(
+    Array.from(
+      {length: 20},
+      () =>
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDay(),
+          0,
+          0,
+          0,
+        ),
+    ),
+  );
+  const [timeChecked, setTimeChecked] = useState(
+    Array.from({length: parseInt(20, 10)}, () => false),
+  );
+  const [medicineMemo, setMedicineMemo] = useState('');
 
   const types = [
     {label: '알약', value: 'pill'},
@@ -75,54 +94,66 @@ function AddMedicine() {
     }`;
   };
 
-  useEffect(() => {
-    if (medicineCount > 0) {
-      let tmp = Array.from({length: parseInt(medicineCount, 10)}, () => false);
-      setTimeOpen(tmp);
-      let tmp2 = [];
-      for (var i = 0; i < medicineCount; i++) {
-        tmp2.push(new Date());
-      }
-      setPeriodicList(tmp2);
-    }
-  }, [medicineCount]);
-
   const getTimeSelectElementOpen = index => {
-    setTimeOpen[index] = true;
+    let tmp = Array.from({length: 20}, () => false);
+    tmp[index] = true;
+    tmp & setTimeOpen(tmp);
   };
 
   const getTimeSelectElementClose = index => {
-    setTimeOpen[index] = false;
+    let tmp = Array.from({length: 20}, () => false);
+    tmp[index] = false;
+    tmp && setTimeOpen(tmp);
   };
 
   const setTimeSelectElement = (index, date) => {
-    setPeriodicList[index] = date;
+    setTimeChecked(index);
+
+    let tmp = [
+      ...periodicList.slice(0, index),
+      new Date(date),
+      ...periodicList.slice(index + 1),
+    ];
+    tmp && setPeriodicList(tmp);
+  };
+
+  const getKRtime = curr => {
+    return new Date(curr.setHours(curr.getHours() + 9));
+  };
+
+  const printTime = cur => {
+    var hours = ('0' + cur.getHours()).slice(-2);
+    var minutes = ('0' + cur.getMinutes()).slice(-2);
+
+    var timeString = hours + ':' + minutes;
+
+    return timeString;
   };
 
   const onSubmit = () => {
+    let tmp = periodicList.slice(0, medicineCount);
+    for (var i = 0; i < medicineCount; i++) {
+      tmp[i] = getKRtime(periodicList[i]);
+    }
     const res = {
       name: medicineName,
       type: medicineType,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: getKRtime(startDate),
+      endDate: getKRtime(endDate),
       cycle: medicineCycle,
       count: medicineCount,
-      periods: periodicList,
+      periods: tmp,
       memo: medicineMemo,
     };
+
     let addPill = null;
     auth().onAuthStateChanged(user => {
-      addPill = firestore().collection('Users').doc(user.uid).collection('pillList').doc(medicineName);
-      addPill.set({
-        name: medicineName,
-        type: medicineType,
-        startDate: startDate,
-        endDate: endDate,
-        cycle: medicineCycle,
-        count: medicineCount,
-        periods: periodicList,
-        memo: medicineMemo,
-      });
+      addPill = firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .collection('pillList')
+        .doc(medicineName);
+      addPill.set(res);
     });
   };
 
@@ -192,6 +223,7 @@ function AddMedicine() {
             title="복용 종료 날짜를 선택하세요"
             confirmText="확인"
             cancelText="취소"
+            minimumDate={new Date()}
           />
         </View>
         <Text style={styles.input_text}>복용 주기를 선택하세요 (단위: 일)</Text>
@@ -220,17 +252,31 @@ function AddMedicine() {
                   mode="text"
                   onPress={() => getTimeSelectElementOpen(idx)}
                   style={styles.timebutton}>
-                  복용 시간
+                  {new Date().getTime !== periodicList[idx] ? (
+                    printTime(periodicList[idx])
+                  ) : (
+                    <Text>복용 시간</Text>
+                  )}
                 </Button>
-                {/* {periodicList[idx] && (
+                {!!periodicList[idx] && timeOpen[idx] && (
                   <DatePicker
                     modal
                     open={timeOpen[idx]}
-                    date={periodicList[idx]}
+                    date={
+                      periodicList[idx]
+                        ? periodicList[idx]
+                        : new Date(
+                            today.getFullYear(),
+                            today.getMonth(),
+                            today.getDay(),
+                            0,
+                            0,
+                            0,
+                          )
+                    }
                     mode="time"
                     onConfirm={date => {
-                      getTimeSelectElementClose(idx);
-                      setPeriodicList(idx, date);
+                      setTimeSelectElement(idx, date);
                       getTimeSelectElementClose(idx);
                     }}
                     onCancel={() => {
@@ -239,8 +285,9 @@ function AddMedicine() {
                     title="복용 시작 날짜를 선택하세요"
                     confirmText="확인"
                     cancelText="취소"
+                    minuteInterval={30}
                   />
-                )} */}
+                )}
               </View>
             ),
           )}
