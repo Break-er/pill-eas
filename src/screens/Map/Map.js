@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Platform, PermissionsAndroid} from 'react-native';
+import {View, Platform, PermissionsAndroid, Button} from 'react-native';
 import {Text} from 'react-native-paper';
-import TitleBar from '../../components/TitleBar/TitleBar';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from "react-native-geolocation-service";
+import firestore from '@react-native-firebase/firestore';
 
 async function requestPermission() {
   try {
@@ -23,21 +23,63 @@ async function requestPermission() {
   }
 }
 
-// state = { reports: [] } 
+let all;
+let nearby = []
 
-// nearbyMarkers = () => {
-//   return this.state.reports.map((report) =>
-//    <Marker
-//     key={report.id}
-//     coordinate={{latitude: report.lat, longitude: report.lon}}
-//     title={report.location}
-//     description={report.comments}
-//    >
-//    </Marker>)
-// } 
+firestore().collection('Places').get()
+  .then(querySnapshot => {
+    console.log(querySnapshot.size);
+    all = querySnapshot;
+  });
+
+function getNearby(latitude, longitude) {
+  nearby = []
+  all.forEach(doc => {
+    if (((doc.data().latitude - latitude)**2 + (doc.data().longitude - longitude)**2) <= 0.00005) {
+      nearby.push(doc);
+    }
+  })
+}
+
+drawMarkers = () => {
+  return nearby.map((doc) =>
+  <Marker
+    key={doc.id}
+    coordinate={{latitude: doc.data().latitude, longitude: doc.data().longitude}}
+    title={doc.data().name}
+    description={doc.data().address}
+  >
+  </Marker>)
+}
+
+// for Batch Write
+/* const db = firebase.firestore()
+const batch = firestore().batch()
+
+function batchWrite() {
+  state.forEach((doc) => {
+    let docRef = db.collection("Places").doc();
+    batch.set(docRef, doc);
+  });
+  console.log("Ready to Commit...")
+}
+
+function batchCommit() {
+  batch.commit().then(()=>console.log("Successfully Added!"));
+} */
+
+// 서버에서 모든 수거처 데이터 로드
+// firestore().collection('Places').get()
+//   .then(querySnapshot => {
+//     console.log("Total data : ", querySnapshot.size);
+//     querySnapshot.forEach(documentSnapshot => {
+//       all.push(documentSnapshot.data());
+//     });
+//   });
 
 function Map() {
   const [location, setLocation] = useState();
+  const [middle, setMiddle] = useState();
   useEffect(() => {
     requestPermission().then(result => {
       console.log({result});
@@ -86,25 +128,30 @@ function Map() {
               latitude: region.latitude,
               longitude: region.longitude,
             });
+            setMiddle({
+              latitude: region.latitude,
+              longitude: region.longitude,
+            });
           }}
           onRegionChangeComplete={region=> {
             setLocation({
               latitude: region.latitude,
               longitude: region.longitude,
             });
+            setMiddle({
+              latitude: region.latitude,
+              longitude: region.longitude,
+            });
+            console.log(middle.latitude, middle.longitude)
+            console.log(region.latitude, region.longitude)
+            getNearby(middle.latitude, middle.longitude);
           }}
           >
-          {/* {this.nearbyMarkers()} */}
+          {this.drawMarkers()}
         </MapView>
       </View>
     </>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     marginLeft: 30,
-//   },
-// });
 
 export default Map;

@@ -15,14 +15,16 @@ import firestore from '@react-native-firebase/firestore';
 
 let data = [];
 auth().onAuthStateChanged(user => {
-  const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
-  pillList.then(querySnapshot => {
-    querySnapshot.forEach(documentSnapshot => {
-      //console.log(documentSnapshot.data());
-      data.push(documentSnapshot.data());
-      console.log(data);
-    });
-  });
+  if (user) {
+    const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
+    pillList.then(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        //console.log(documentSnapshot.data());
+        data.push(documentSnapshot.data());
+        console.log(data);
+      });
+    }); 
+  }
 });
 console.log(data);
 
