@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {TextInput, Button, RadioButton} from 'react-native-paper';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
+import {TextInput, Button} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
+import {useNavigation} from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 function AddMedicine() {
+  const navigation = useNavigation();
   const today = new Date();
   const [medicineName, setMedicineName] = useState('');
   const [medicineType, setMedicineType] = useState('pill');
@@ -155,6 +157,8 @@ function AddMedicine() {
         .doc(medicineName);
       addPill.set(res);
     });
+    Alert.alert('저장되었습니다');
+    navigation.navigate('List');
   };
 
   return (
