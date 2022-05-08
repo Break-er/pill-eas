@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, ScrollView, Alert} from 'react-native';
 import {
   List,
   Searchbar,
@@ -18,12 +18,16 @@ function MedicineList({navigation}) {
   const [expanded, setExpanded] = useState(true);
   const [visible, setVisible] = useState(false);
   const [medicineList, setMedicineList] = useState([]);
+  const [selectedItem, setSelectedItem] = useState();
 
   const onChangeSearch = query => setSearchQuery(query);
 
   const handlePress = () => setExpanded(!expanded);
 
-  const showModal = () => setVisible(true);
+  const showModal = item => {
+    setVisible(true);
+    setSelectedItem(item);
+  };
   const hideModal = () => setVisible(false);
   const containerStyle = {backgroundColor: 'white', padding: 20};
 
@@ -69,6 +73,21 @@ function MedicineList({navigation}) {
       case 'oral_decomposition_film':
         return '구강분해필름';
     }
+  };
+
+  const onPressModifyBtn = item => {
+    navigation.navigate('EditMedicine', {
+      param: item,
+    });
+  };
+
+  const onPressDeleteConfirm = () => {
+    console.log(selectedItem);
+
+    // 선택된 아이템(selectedItem)에 대한 삭제 작업 (firebase 코드)
+
+    setVisible(false);
+    // Alert.alert("삭제되었습니다.")
   };
 
   useEffect(() => {
@@ -145,15 +164,15 @@ function MedicineList({navigation}) {
                             <Button
                               mode="text"
                               color="#8AB5E6"
-                              onPress={() => console.log('fix Pressed')}>
+                              onPress={() => onPressModifyBtn(item)}>
                               수정
-                            </Button>{' '}
+                            </Button>
                             <Button
                               mode="text"
                               color="#8AB5E6"
-                              onPress={showModal}>
+                              onPress={() => showModal(item)}>
                               삭제
-                            </Button>{' '}
+                            </Button>
                           </Text>
                         </View>
                       </View>
@@ -177,13 +196,13 @@ function MedicineList({navigation}) {
                 <Button
                   mode="text"
                   color="#8AB5E6"
-                  onPress={() => console.log('okay Pressed')}>
+                  onPress={() => onPressDeleteConfirm()}>
                   예
                 </Button>{' '}
                 <Button
                   mode="text"
                   color="#8AB5E6"
-                  onPress={() => console.log('no Pressed')}>
+                  onPress={() => setVisible(false)}>
                   아니오
                 </Button>
               </Text>
