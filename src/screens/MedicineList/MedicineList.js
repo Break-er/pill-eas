@@ -88,10 +88,13 @@ function MedicineList({ navigation }) {
   };
 
   const onPressDeleteConfirm = () => {
-    console.log(selectedItem);
-
-    // 선택된 아이템(selectedItem)에 대한 삭제 작업 (firebase 코드)
-
+    auth().onAuthStateChanged(user => {
+      firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .collection('pillList')
+        .doc(selectedItem.name).delete();
+    });
     setVisible(false);
     // Alert.alert("삭제되었습니다.")
   };

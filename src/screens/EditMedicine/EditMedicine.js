@@ -151,8 +151,21 @@ function EditMedicine({route}) {
 
     res && console.log(res);
 
-    // 선택된 아이템에 대한 수정 작업 (firebase 코드)
-
+    auth().onAuthStateChanged(user => {
+      firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .collection('pillList')
+        .doc(res.name).update({
+          type : res.type,
+          startDate : res.startDate,
+          endDate : res.endDate,
+          cycle : res.cycle,
+          count : res.count,
+          periods : res.periods,
+          memo : res.memo
+        });
+    });
     // Alert.alert('저장되었습니다');
     // navigation.navigate('List');
   };
