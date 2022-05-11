@@ -11,8 +11,6 @@ function MedicineCalendar() {
 
   let data = [];
 
-  // console.log(data);
-
   const [periodState, setPeriodState] = useState({});
   const [currentDate, setCurrentDate] = useState('');
   const [usingData, setUsingData] = useState([]);
@@ -51,18 +49,18 @@ function MedicineCalendar() {
 
           for (let i = 0; i < data.length; i++) {
 
-            let tempStart = new Date(data[i].startDate.nanoseconds);
+            let tempStart = new Date((data[i].startDate.seconds) * 1000);
             let tempYear_s = tempStart.getFullYear(); // 년도
             let tempMonth_s = tempStart.getMonth() + 1;  // 월
             let tempDate_s = tempStart.getDate();  // 날짜
             let parsingDate_s = `${tempYear_s}-${tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s}-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
 
-            let tempEnd = new Date(data[i].endDate.nanoseconds);
+            let tempEnd = new Date((data[i].endDate.seconds) * 1000);
             let tempYear_e = tempEnd.getFullYear(); // 년도
             let tempMonth_e = tempEnd.getMonth() + 1;  // 월
             let tempDate_e = tempEnd.getDate();  // 날짜
             let parsingDate_e = `${tempYear_e}-${tempMonth_e >= 10 ? tempMonth_e : '0' + tempMonth_e}-${tempDate_e >= 10 ? tempDate_e : '0' + tempDate_e}`;
-            
+
             const tempData = {
               name: data[i].name,
               start: parsingDate_s,
@@ -114,7 +112,6 @@ function MedicineCalendar() {
 
         if (currentStartMonth === i) {
 
-
           for (let j = tempStartDate.getDate() + 1; j <= monthDate[i - 1]; j++) {
 
             calDate.setDate(j);
@@ -129,7 +126,6 @@ function MedicineCalendar() {
           }
         }
         else if (currentEndMonth === i) {
-
 
           calDate.setMonth(i);
 
@@ -147,7 +143,6 @@ function MedicineCalendar() {
           }
         }
         else if ((currentStartMonth !== i) && (currentEndMonth !== i)) {
-
 
           calDate.setMonth(i);
 
@@ -312,7 +307,7 @@ function MedicineCalendar() {
         markedDates={periodState}
       />
 
-      <Swiper style={styles.wrapper} showsButtons={false} showsPagination={true} onIndexChanged={index => { clearPeriods(); }} loop={false}>
+      <Swiper showsButtons={true} showsPagination={false} onIndexChanged={index => { clearPeriods(); }} loop={false}>
         {usingData && usingData.map((item, idx) => (
           <View style={styles.slide} key={idx}>
             <Button contentStyle={styles.listDesign} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
@@ -338,9 +333,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
   },
-  wrapper: {
-    marginTop: -15,
-  },
 
   slide: {
     flex: 1,
@@ -351,7 +343,7 @@ const styles = StyleSheet.create({
 
   listDesign: {
     width: '100%',
-    height: 60,
+    height: 50,
   },
 
   listText: {
