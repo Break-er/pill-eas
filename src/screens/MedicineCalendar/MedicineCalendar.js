@@ -28,7 +28,6 @@ function MedicineCalendar() {
       const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
       pillList.then(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
-          //console.log(documentSnapshot.data());
           data.push(documentSnapshot.data());
         });
       })
@@ -68,10 +67,7 @@ function MedicineCalendar() {
             }
             tempArr.push(tempData)
           }
-
           setUsingData(tempArr);
-
-          console.log(usingData)
         });
     });
 
@@ -81,9 +77,8 @@ function MedicineCalendar() {
   function clickList(idx) {
     startDate = usingData[idx].start;
     endDate = usingData[idx].end;
-    console.log(usingData[idx])
+    
     setCurrentDate(startDate);
-
     duringDate = calDuringDate();
     makingPeriods();
   }
@@ -193,13 +188,6 @@ function MedicineCalendar() {
       let addPeriods = null;
 
       if (startDate !== undefined) {
-        // addPeriods = {
-        //   'temp': {
-        //     periods: [
-        //       { startingDay: null, endingDay: null, color: '' }
-        //     ]
-        //   }
-        // }
         addPeriods = {
           'temp': { startingDay: null, endingDay: null, color: '' }
         }
@@ -212,13 +200,6 @@ function MedicineCalendar() {
 
       if (duringDate !== undefined) {
         for (let i = 0; i < duringDate.length; i++) {
-          // addPeriods = {
-          //   "temp": {
-          //     periods: [
-          //       { startingDay: null, endingDay: null, color: '' }
-          //     ]
-          //   }
-          // }
           addPeriods = {
             'temp': { startingDay: null, endingDay: null, color: '' }
           }
@@ -231,13 +212,6 @@ function MedicineCalendar() {
       }
 
       if (endDate !== undefined) {
-        // addPeriods = {
-        //   "temp": {
-        //     periods: [
-        //       { startingDay: null, endingDay: null, color: '' },
-        //     ]
-        //   }
-        // }
         addPeriods = {
           'temp': { startingDay: null, endingDay: null, color: '' }
         }
@@ -248,27 +222,15 @@ function MedicineCalendar() {
         delete addPeriods[OLD_NAME];
         Object.assign(markPeriods, addPeriods);
 
-        // markPeriods[startDate]["periods"][0]["startingDay"] = true;
-        // markPeriods[startDate]["periods"][0]["endingDay"] = false;
-        // markPeriods[startDate]["periods"][0]["color"] = pickColor[randNum];
-
         markPeriods[startDate]["startingDay"] = true;
         markPeriods[startDate]["endingDay"] = false;
         markPeriods[startDate]["color"] = pickColor[randNum];
 
         for (let i = 0; i < duringDate.length; i++) {
-          // markPeriods[duringDate[i]]["periods"][0]["startingDay"] = false;
-          // markPeriods[duringDate[i]]["periods"][0]["endingDay"] = false;
-          // markPeriods[duringDate[i]]["periods"][0]["color"] = pickColor[randNum];
-
           markPeriods[duringDate[i]]["startingDay"] = false;
           markPeriods[duringDate[i]]["endingDay"] = false;
           markPeriods[duringDate[i]]["color"] = pickColor[randNum];
         }
-
-        // markPeriods[endDate]["periods"][0]["startingDay"] = false;
-        // markPeriods[endDate]["periods"][0]["endingDay"] = true;
-        // markPeriods[endDate]["periods"][0]["color"] = pickColor[randNum];
 
         markPeriods[endDate]["startingDay"] = false;
         markPeriods[endDate]["endingDay"] = true;
@@ -307,7 +269,7 @@ function MedicineCalendar() {
         markedDates={periodState}
       />
 
-      <Swiper showsButtons={true} showsPagination={false} onIndexChanged={index => { clearPeriods(); }} loop={false}>
+      <Swiper showsButtons={true} showsPagination={false} loop={false} onIndexChanged={() => { clearPeriods(); }}>
         {usingData && usingData.map((item, idx) => (
           <View style={styles.slide} key={idx}>
             <Button contentStyle={styles.listDesign} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
@@ -316,9 +278,6 @@ function MedicineCalendar() {
           </View>
         ))}
       </Swiper>
-
-
-
     </View>
   );
 }
@@ -326,7 +285,6 @@ function MedicineCalendar() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
 
   titleBar: {
@@ -338,12 +296,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#FFFFFF',
   },
 
   listDesign: {
     width: '100%',
     height: 50,
+    backgroundColor: '#8AB5E6'
   },
 
   listText: {
