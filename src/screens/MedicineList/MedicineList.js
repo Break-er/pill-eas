@@ -27,10 +27,8 @@ function MedicineList({ navigation }) {
   const [expanded, setExpanded] = useState(false);
 
   const handlePress = () => {
-
     setExpanded(!expanded);
   }
-
 
   const showModal = item => {
     setVisible(true);
