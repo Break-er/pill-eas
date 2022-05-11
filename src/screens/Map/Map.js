@@ -4,7 +4,6 @@ import {Text} from 'react-native-paper';
 import MapView, {PROVIDER_GOOGLE, Marker, Overlay} from 'react-native-maps';
 import Geolocation from "react-native-geolocation-service";
 import firestore from '@react-native-firebase/firestore';
-import SlidingUpPanel from 'rn-sliding-up-panel';
 import DraggablePanel from 'react-native-draggable-panel';
 
 async function requestPermission() {
