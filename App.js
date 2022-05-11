@@ -12,6 +12,7 @@ import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
 import AddMedicine from './src/screens/AddMedicine/AddMedicine';
+import EditMedicine from './src/screens/EditMedicine/EditMedicine';
 import SettingsScreen from './src/screens/Settings/Settings';
 import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
@@ -108,6 +109,18 @@ const App = () => {
           <Stack.Screen
             name="AddMedicine"
             component={AddMedicine}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#ffffff',
+              },
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="EditMedicine"
+            component={EditMedicine}
             options={{
               headerTitle: '',
               headerRight: () => <Header />,

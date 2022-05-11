@@ -7,7 +7,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-function AddMedicine() {
+function EditMedicine({route}) {
+  const {param} = route.params;
   const navigation = useNavigation();
   const today = new Date();
   const [medicineName, setMedicineName] = useState('');
@@ -148,18 +149,41 @@ function AddMedicine() {
       memo: medicineMemo,
     };
 
-    let addPill = null;
-    auth().onAuthStateChanged(user => {
-      addPill = firestore()
-        .collection('Users')
-        .doc(user.uid)
-        .collection('pillList')
-        .doc(medicineName);
-      addPill.set(res);
-    });
-    Alert.alert('저장되었습니다');
-    navigation.navigate('List');
+    res && console.log(res);
+
+    // 선택된 아이템에 대한 수정 작업 (firebase 코드)
+
+    // Alert.alert('저장되었습니다');
+    // navigation.navigate('List');
   };
+
+  useEffect(() => {
+    setMedicineName(param.name);
+    setMedicineType(param.type);
+    setStartDate(new Date(param.startDate.seconds * 1000));
+    setEndDate(new Date(param.endDate.seconds * 1000));
+    setMedicineCycle(param.cycle);
+    setMedicineCount(param.count);
+
+    let tmp = Array.from(
+      {length: 20},
+      () =>
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDay(),
+          0,
+          0,
+          0,
+        ),
+    );
+    param.periods.forEach((item, index, param) => {
+      tmp[index] = new Date(item.seconds * 1000);
+    });
+
+    tmp && setPeriodicList(tmp);
+    setMedicineMemo(param.memo);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -176,6 +200,7 @@ function AddMedicine() {
           onValueChange={value => setMedicineType(value)}
           items={types}
           placeholder={{}}
+          value={medicineType}
           useNativeAndroidPickerStyle={false}
         />
         <Text style={styles.input_text}>
@@ -186,7 +211,7 @@ function AddMedicine() {
             mode="text"
             onPress={() => setStartOpen(true)}
             style={styles.datebutton}>
-            {startChecked ? getDateFormat(startDate) : '시작 날짜'}
+            {getDateFormat(startDate)}
           </Button>
           <DatePicker
             modal
@@ -209,7 +234,7 @@ function AddMedicine() {
             mode="text"
             onPress={() => setEndOpen(true)}
             style={styles.datebutton}>
-            {endChecked ? getDateFormat(endDate) : '종료 날짜'}
+            {getDateFormat(endDate)}
           </Button>
           <DatePicker
             modal
@@ -235,6 +260,7 @@ function AddMedicine() {
           onValueChange={value => setMedicineCycle(value)}
           items={cycle}
           placeholder={{}}
+          value={medicineCycle}
           useNativeAndroidPickerStyle={false}
         />
         <Text style={styles.input_text}>하루에 몇 번 복용하시나요?</Text>
@@ -242,6 +268,7 @@ function AddMedicine() {
           onValueChange={value => setMedicineCount(value)}
           items={counts}
           placeholder={{}}
+          value={medicineCount}
           useNativeAndroidPickerStyle={false}
         />
         {medicineCount > 0 && (
@@ -307,10 +334,9 @@ function AddMedicine() {
         />
         <Button
           mode="contained"
-          //   color="white"
           onPress={() => onSubmit()}
           style={styles.submit_btn}>
-          저장하기
+          수정하기
         </Button>
       </ScrollView>
     </View>
@@ -348,4 +374,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddMedicine;
+export default EditMedicine;

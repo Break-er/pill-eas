@@ -29,16 +29,15 @@ function Login({route}) {
 
     auth().onAuthStateChanged(user => {
       let userDoc = null;
-      userDoc = userCollection.doc(user.uid).get()
-      .then((docSnapshot) => {
-        if (docSnapshot.exists) {
-          console.log("exist!!");
-        }
-        else {
-          console.log("new");
-          userCollection.doc(user.uid).set({fillList : []});
-        }
-      });
+      userDoc = userCollection
+        .doc(user.uid)
+        .get()
+        .then(docSnapshot => {
+          if (docSnapshot.exists) {
+          } else {
+            userCollection.doc(user.uid).set({fillList: []});
+          }
+        });
     });
     if (checkLoggedIn) {
       Alert.alert('로그인 되었습니다.');
