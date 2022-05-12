@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, View, StyleSheet, ScrollView, Alert} from 'react-native';
 import {
   List,
   Searchbar,
@@ -8,35 +8,39 @@ import {
   Portal,
   Provider,
   FAB,
+  ActivityIndicator,
 } from 'react-native-paper';
 import TitleBar from '../../components/TitleBar/TitleBar';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useIsFocused} from '@react-navigation/native';
 
-function MedicineList({ navigation }) {
+function MedicineList({navigation}) {
+  const isFocused = useIsFocused();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [visible, setVisible] = useState(false);
-  const [medicineList, setMedicineList] = useState([]);
+  const [medicineList, setMedicineList] = useState();
   const [selectedItem, setSelectedItem] = useState();
 
-  const onChangeSearch = (query) => {
+  const onChangeSearch = query => {
     setSearchQuery(query);
-  }
+  };
 
   const [expanded, setExpanded] = useState(false);
 
   const handlePress = () => {
     setExpanded(!expanded);
-  }
+  };
 
   const showModal = item => {
     setVisible(true);
     setSelectedItem(item);
-    console.log(item)
+    console.log(item);
   };
   const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: 'white', padding: 20 };
+  const containerStyle = {backgroundColor: 'white', padding: 20};
 
   const moveScreen = path => {
     navigation.navigate(path);
@@ -47,8 +51,9 @@ function MedicineList({ navigation }) {
     let tempYear_s = date.getFullYear();
     let tempMonth_s = date.getMonth() + 1;
     let tempDate_s = date.getDate();
-    let parsingDate_s = `${tempYear_s}-${tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s
-      }-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
+    let parsingDate_s = `${tempYear_s}-${
+      tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s
+    }-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
 
     return parsingDate_s;
   };
@@ -93,10 +98,14 @@ function MedicineList({ navigation }) {
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
-        .doc(selectedItem.name).delete();
+        .doc(selectedItem.name)
+        .delete()
+        .then(() => {
+          setVisible(false);
+          Alert.alert('삭제되었습니다.');
+          navigation.reset({index: 0, routes: [{name: 'List'}]});
+        });
     });
-    setVisible(false);
-    // Alert.alert("삭제되었습니다.")
   };
 
   useEffect(() => {
@@ -118,6 +127,25 @@ function MedicineList({ navigation }) {
     });
   }, [searchQuery]);
 
+  useEffect(() => {
+    let tmp = [];
+    auth().onAuthStateChanged(user => {
+      firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .collection('pillList')
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+            tmp.push(documentSnapshot.data());
+          });
+        })
+        .then(() => {
+          tmp && setMedicineList(tmp.reverse());
+        });
+    });
+  }, [isFocused]);
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -135,70 +163,87 @@ function MedicineList({ navigation }) {
             iconColor="#8AB5E6"
             placeholder="현재 복용 중인 약 검색"
           />
-          {medicineList &&
-            medicineList.filter((item) => {
-              if (searchQuery === "" || searchQuery === undefined) {
-                return item;
-              }
-              else if (item.name.includes(searchQuery)) {
-                return item;
-              }
-            }).map((item, idx) => {
-              return <List.Accordion
-                title={item.name}
-                left={props => <Ionicons {...props} name="bandage-outline" style={styles.iconDesign}></Ionicons>}
-                onPress={handlePress}
-                style={{ color: '#8AB5E6' }}
-                key={idx}>
-                <List.Item
-                  title={() => (
-                    <View style={{ marginTop: -10 }}>
-                      <Text style={styles.listItem}>
-                        약 제형 : {getTypeName(item.type)}
-                      </Text>
-                      <Text style={styles.listItem}>
-                        복용 시작 : {printDate(item.startDate)}
-                      </Text>
-                      <Text style={styles.listItem}>
-                        복용 종료 : {printDate(item.endDate)}
-                      </Text>
-                      <Text style={styles.listItem}>
-                        복용 주기 : {item.cycle}일
-                      </Text>
-                      <Text style={styles.listItem}>
-                        복용 횟수 : {item.count}번 / 일
-                      </Text>
-                      <Text style={styles.listItem}>
-                        복용 시간 :{' '}
-                        {printTime(item.periods).map((time, index) => (
-                          <Text key={index}>
-                            {time}
-                            {'  '}
+          {medicineList ? (
+            medicineList
+              .filter(item => {
+                if (searchQuery === '' || searchQuery === undefined) {
+                  return item;
+                } else if (item.name.includes(searchQuery)) {
+                  return item;
+                }
+              })
+              .map((item, idx) => {
+                return (
+                  <List.Accordion
+                    title={item.name}
+                    left={props => (
+                      <Ionicons
+                        {...props}
+                        name="bandage-outline"
+                        style={styles.iconDesign}></Ionicons>
+                    )}
+                    onPress={handlePress}
+                    style={{color: '#8AB5E6'}}
+                    key={idx}>
+                    <List.Item
+                      title={() => (
+                        <View style={{marginTop: -10}}>
+                          <Text style={styles.listItem}>
+                            약 제형 : {getTypeName(item.type)}
                           </Text>
-                        ))}
-                      </Text>
-                      <View style={styles.modifyBtn}>
-                        <Text>
-                          <Button
-                            mode="text"
-                            color="#8AB5E6"
-                            onPress={() => onPressModifyBtn(item)}>
-                            수정
-                          </Button>
-                          <Button
-                            mode="text"
-                            color="#8AB5E6"
-                            onPress={() => showModal(item)}>
-                            삭제
-                          </Button>
-                        </Text>
-                      </View>
-                    </View>
-                  )}
-                />
-              </List.Accordion>
-            })
-          }
+                          <Text style={styles.listItem}>
+                            복용 시작 : {printDate(item.startDate)}
+                          </Text>
+                          <Text style={styles.listItem}>
+                            복용 종료 : {printDate(item.endDate)}
+                          </Text>
+                          <Text style={styles.listItem}>
+                            복용 주기 : {item.cycle}일
+                          </Text>
+                          <Text style={styles.listItem}>
+                            복용 횟수 : {item.count}번 / 일
+                          </Text>
+                          <Text style={styles.listItem}>
+                            복용 시간 :{' '}
+                            {printTime(item.periods).map((time, index) => (
+                              <Text key={index}>
+                                {time}
+                                {'  '}
+                              </Text>
+                            ))}
+                          </Text>
+                          <View style={styles.modifyBtn}>
+                            <Text>
+                              <Button
+                                mode="text"
+                                color="#8AB5E6"
+                                onPress={() => onPressModifyBtn(item)}>
+                                수정
+                              </Button>
+                              <Button
+                                mode="text"
+                                color="#8AB5E6"
+                                onPress={() => showModal(item)}>
+                                삭제
+                              </Button>
+                            </Text>
+                          </View>
+                        </View>
+                      )}
+                    />
+                  </List.Accordion>
+                );
+              })
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingTop: 140,
+              }}>
+              <ActivityIndicator size="large" color="#85DEDC" />
+            </View>
+          )}
         </List.Section>
       </ScrollView>
       <Provider>
@@ -208,8 +253,8 @@ function MedicineList({ navigation }) {
             onDismiss={hideModal}
             contentContainerStyle={containerStyle}
             style={styles.modalStyle}>
-            <Text style={{ padding: 20 }}>선택한 약을 삭제하시겠습니까?</Text>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{padding: 20}}>선택한 약을 삭제하시겠습니까?</Text>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Text>
                 <Button
                   mode="text"
@@ -250,7 +295,7 @@ const styles = StyleSheet.create({
   searchBar: {
     width: '94%',
     margin: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
 
   listItem: {
@@ -285,9 +330,8 @@ const styles = StyleSheet.create({
   iconDesign: {
     fontSize: 20,
     marginLeft: 10,
-    marginRight: 5
+    marginRight: 5,
   },
-
 });
 
 export default MedicineList;

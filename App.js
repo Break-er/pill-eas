@@ -13,9 +13,9 @@ import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
 import AddMedicine from './src/screens/AddMedicine/AddMedicine';
 import EditMedicine from './src/screens/EditMedicine/EditMedicine';
-import SettingsScreen from './src/screens/Settings/Settings';
 import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
+import InformationScreen from './src/screens/Information/Information';
 import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -47,34 +47,38 @@ const App = () => {
   const Stack = createNativeStackNavigator();
 
   const initBackgroundFetch = async () => {
-    let status = await BackgroundFetch.configure({
+    let status = await BackgroundFetch.configure(
+      {
         minimumFetchInterval: 15,
         stopOnTerminate: false,
         enableHeadless: true,
         startOnBoot: true,
         // Android options
-        forceAlarmManager: false,      // <-- Set true to bypass JobScheduler.
+        forceAlarmManager: false, // <-- Set true to bypass JobScheduler.
         requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
-        requiresCharging: false,       // Default
-        requiresDeviceIdle: false,     // Default
-        requiresBatteryNotLow: false,  // Default
-        requiresStorageNotLow: false
-      }, async (taskId) => {
-          console.log('[BackgroundFetch] task:', taskId);
-      }, async (taskId) => {
-          console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
-          BackgroundFetch.finish(taskId);
-      });
+        requiresCharging: false, // Default
+        requiresDeviceIdle: false, // Default
+        requiresBatteryNotLow: false, // Default
+        requiresStorageNotLow: false,
+      },
+      async taskId => {
+        console.log('[BackgroundFetch] task:', taskId);
+      },
+      async taskId => {
+        console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
+        BackgroundFetch.finish(taskId);
+      },
+    );
 
-      console.log('status:', status);
+    console.log('status:', status);
 
-      // BackgroundFetch.scheduleTask({
-      //   taskId: 'test',
-      //   delay: 0,
-      //   forceAlarmManager: true,
-      //   periodic: true
-      // });
-  }
+    // BackgroundFetch.scheduleTask({
+    //   taskId: 'test',
+    //   delay: 0,
+    //   forceAlarmManager: true,
+    //   periodic: true
+    // });
+  };
 
   useEffect(() => {
     try {
@@ -127,18 +131,6 @@ const App = () => {
             }}
           />
           <Stack.Screen
-            name="Settings"
-            component={SettingsScreen}
-            options={{
-              headerTitle: '',
-              headerRight: () => <Header />,
-              headerStyle: {
-                backgroundColor: '#85DEDC',
-              },
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
             name="AddMedicine"
             component={AddMedicine}
             options={{
@@ -160,6 +152,17 @@ const App = () => {
                 backgroundColor: '#ffffff',
               },
               headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="Info"
+            component={InformationScreen}
+            options={{
+              headerTitle: '',
+              headerRight: () => <Header />,
+              headerStyle: {
+                backgroundColor: '#ffffff',
+              },
             }}
           />
         </Stack.Navigator>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Provider as PaperProvider, Menu, Button} from 'react-native-paper';
+import {Provider, Menu, Modal, Text, Portal} from 'react-native-paper';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ function Header() {
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
@@ -43,12 +44,21 @@ function Header() {
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <Ionicons
-            name="ios-settings-outline"
-            size={20}
-            color="#000000"
-            onPress={openMenu}
-          />
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Ionicons
+              name="help-circle-outline"
+              size={24}
+              color="#000000"
+              onPress={() => moveScreen('Info')}
+            />
+            <Ionicons
+              name="ios-settings-outline"
+              size={20}
+              color="#000000"
+              onPress={openMenu}
+              style={{marginLeft: 10, marginTop: 2}}
+            />
+          </View>
         }>
         <Menu.Item
           onPress={() => moveScreen('Login')}
