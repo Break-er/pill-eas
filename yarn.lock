@@ -6000,6 +6000,11 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
+"react-native-background-fetch@^4.1.0":
+  "integrity" "sha512-LWl1xuLNfHbD9MQXV31RvpCia9hMxOW+gwjp5yzW7BbiZWTWV2TQ9szuHaPn4NBWHDdh+MtI5pb6JV9P/LCaOQ=="
+  "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-4.1.0.tgz"
+  "version" "4.1.0"
+
 "react-native-calendars@^1.1283.0":
   "integrity" "sha512-CKrjFwM+vLE0qd2M8OyClrtmjZsbCPb9QJs3uTZ9vZc1hnweURIVPSTBINWQrRw8Q/uTzzYmIpS0jlb/kBhKYg=="
   "resolved" "https://registry.npmjs.org/react-native-calendars/-/react-native-calendars-1.1283.0.tgz"
@@ -6122,7 +6127,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.30.0", "react-native@>= 0.51", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@0.68.1":
+"react-native@*", "react-native@>= 0.30.0", "react-native@>= 0.51", "react-native@>=0.28.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@0.68.1":
   "integrity" "sha512-5gfvslo5NO2Ece2k/q41eVOK3ca4u1QAOf+qM+auvOiUA4/QR5Yr0WfSGbRpUr2GaFgv7qP11F4+elCravg7uQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.68.1.tgz"
   "version" "0.68.1"

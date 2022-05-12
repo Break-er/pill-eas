@@ -30,11 +30,8 @@ let nearby = []
 // 서버에서 모든 수거처 데이터 로드
 firestore().collection('Places').get()
   .then(querySnapshot => {
-    console.log(querySnapshot.size);
+    //console.log(querySnapshot.size);
     all = querySnapshot;
-    // querySnapshot.forEach(doc => {
-    //   console.log(doc.id, doc.data().name)
-    // })
   });
 
 // 중점 기준 인근 수거처 따로 수집
