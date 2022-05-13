@@ -30,8 +30,8 @@ class Notifications {
     // 이 함수 호출하면 푸시 알림 날아옴.
     scheduleNotification(date) {
         PushNotification.localNotificationSchedule({
-            channelId: 'pillease',
-            title: '약 종류',
+            channelId: 'Pill:ease',
+            title: '약 복용 알림',
             message: '약 먹을 시간입니다!',
             date,
         })

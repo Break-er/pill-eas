@@ -22,6 +22,7 @@ import BackgroundFetch from 'react-native-background-fetch';
 import Notifications from './Notifications';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import Notifications from './Notifications';
 
 const theme = {
   ...DefaultTheme,
@@ -66,6 +67,8 @@ const App = () => {
       },
       async taskId => {
         console.log('[BackgroundFetch] task:', taskId);
+        // 사용자 복용 약 시간 리스트 불러와서 현재 시간과 비교 후 알림 전송
+        getTimeLine();
         BackgroundFetch.finish(taskId);
       },
       async taskId => {
@@ -89,28 +92,7 @@ const App = () => {
     Notifications.scheduleNotification(new Date(Date.now() + 5 * 1000));
   };
 
-  useEffect(() => {
-    try {
-      setTimeout(() => {
-        SplashScreen.hide();
-      }, 2000); //스플래시 활성화 시간 2초
-    } catch (e) {
-      console.log(e.message);
-    }
-    initBackgroundFetch();
-  });
-
-  const compareDate = (date1, date2) => {
-    if (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    )
-      return true;
-    else return false;
-  };
-
-  useEffect(() => {
+  function getTimeLine() {
     auth().onAuthStateChanged(user => {
       if (user) {
         setLoggedIn(true);
@@ -158,13 +140,42 @@ const App = () => {
             .then(() => {
               console.log(time_list);
               // 현재시간이랑 time_list에 있는 시간이랑 같으면 알람 보내기
+              let current = Date.now();
+              for (let i=0; i < time_list.length(); i++) {
+                let date = time_list[i];
+                if (date.getMinutes() - 15 <= current.getMinutes() && date.getMinutes() + 15 >= current.getMinutes()) {
+                  setNotification(Date.now() + 3*1000);
+                  break;
+                }
+            }
             });
         });
       } else {
         setLoggedIn(false);
       }
     });
-  }, []);
+  }
+
+  useEffect(() => {
+    try {
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 2000); //스플래시 활성화 시간 2초
+    } catch (e) {
+      console.log(e.message);
+    }
+    initBackgroundFetch();
+  });
+
+  const compareDate = (date1, date2) => {
+    if (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    )
+      return true;
+    else return false;
+  };
 
   return (
     <PaperProvider theme={theme}>
