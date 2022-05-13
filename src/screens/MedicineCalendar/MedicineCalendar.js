@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import TitleBar from '../../components/TitleBar/TitleBar';
 import Swiper from 'react-native-swiper';
-import { Button, Chip } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+
 
 function MedicineCalendar() {
 
@@ -266,8 +267,8 @@ function MedicineCalendar() {
         markingType={'period'}
         markedDates={periodState}
       />
-
-      <Swiper onIndexChanged={() => { clearPeriods(); }} showsButtons={true} showsPagination={false} loop={false} bounces={true}>
+       {/* onIndexChanged={() => { clearPeriods(); }} */}
+      <Swiper onScrollBeginDrag={()=>{ clearPeriods(); }} showsButtons={false} showsPagination={false} loop={false}>
         {usingData && usingData.map((item, idx) => (
           <View style={styles.slide} key={idx}>
             <Button contentStyle={{ width: '100%', height: 50, backgroundColor: picker }} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
