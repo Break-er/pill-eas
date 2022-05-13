@@ -13,7 +13,6 @@ import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
 import AddMedicine from './src/screens/AddMedicine/AddMedicine';
 import EditMedicine from './src/screens/EditMedicine/EditMedicine';
-import SettingsScreen from './src/screens/Settings/Settings';
 import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
 import BottomNav from './src/components/BottomNav/BottomNav';
@@ -48,13 +47,14 @@ const App = () => {
   const Stack = createNativeStackNavigator();
 
   const initBackgroundFetch = async () => {
-    let status = await BackgroundFetch.configure({
+    let status = await BackgroundFetch.configure(
+      {
         minimumFetchInterval: 15,
         stopOnTerminate: false,
         enableHeadless: true,
         startOnBoot: true,
         // Android options
-        forceAlarmManager: false,      // <-- Set true to bypass JobScheduler.
+        forceAlarmManager: false, // <-- Set true to bypass JobScheduler.
         requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
         requiresCharging: false,       // Default
         requiresDeviceIdle: false,     // Default
@@ -68,15 +68,15 @@ const App = () => {
           BackgroundFetch.finish(taskId);
       });
 
-      console.log('status:', status);
+    console.log('status:', status);
 
-      // BackgroundFetch.scheduleTask({
-      //   taskId: 'test',
-      //   delay: 0,
-      //   forceAlarmManager: true,
-      //   periodic: true
-      // });
-  }
+    // BackgroundFetch.scheduleTask({
+    //   taskId: 'test',
+    //   delay: 0,
+    //   forceAlarmManager: true,
+    //   periodic: true
+    // });
+  };
 
   // 이 함수가 실행되면 푸시 알림 날아옴
   const setNotification = () => {
@@ -128,18 +128,6 @@ const App = () => {
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{
-              headerTitle: '',
-              headerRight: () => <Header />,
-              headerStyle: {
-                backgroundColor: '#85DEDC',
-              },
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Settings"
-            component={SettingsScreen}
             options={{
               headerTitle: '',
               headerRight: () => <Header />,

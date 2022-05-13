@@ -51,6 +51,7 @@ function BottomNav({navigation}) {
         component={ListScreen}
         options={{
           title: '복용 중',
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -58,6 +59,7 @@ function BottomNav({navigation}) {
         component={CalendarScreen}
         options={{
           title: '복용 기록',
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -65,6 +67,7 @@ function BottomNav({navigation}) {
         component={MapScreen}
         options={{
           title: '수거함',
+          unmountOnBlur: true,
         }}
       />
     </Tab.Navigator>

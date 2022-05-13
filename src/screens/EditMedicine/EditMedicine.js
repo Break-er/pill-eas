@@ -114,7 +114,7 @@ function EditMedicine({route}) {
 
     let tmp = [
       ...periodicList.slice(0, index),
-      new Date(date),
+      getKRtime(new Date(date)),
       ...periodicList.slice(index + 1),
     ];
     tmp && setPeriodicList(tmp);
@@ -122,6 +122,10 @@ function EditMedicine({route}) {
 
   const getKRtime = curr => {
     return new Date(curr.setHours(curr.getHours() + 9));
+  };
+
+  const getIncorrectKRtime = curr => {
+    return new Date(curr.setHours(curr.getHours() - 9));
   };
 
   const printTime = cur => {
@@ -135,9 +139,6 @@ function EditMedicine({route}) {
 
   const onSubmit = () => {
     let tmp = periodicList.slice(0, medicineCount);
-    for (var i = 0; i < medicineCount; i++) {
-      tmp[i] = getKRtime(periodicList[i]);
-    }
     const res = {
       name: medicineName,
       type: medicineType,
@@ -156,18 +157,21 @@ function EditMedicine({route}) {
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
-        .doc(res.name).update({
-          type : res.type,
-          startDate : res.startDate,
-          endDate : res.endDate,
-          cycle : res.cycle,
-          count : res.count,
-          periods : res.periods,
-          memo : res.memo
+        .doc(res.name)
+        .update({
+          type: res.type,
+          startDate: res.startDate,
+          endDate: res.endDate,
+          cycle: res.cycle,
+          count: res.count,
+          periods: res.periods,
+          memo: res.memo,
+        })
+        .then(() => {
+          Alert.alert('저장되었습니다');
+          navigation.navigate('List');
         });
     });
-    // Alert.alert('저장되었습니다');
-    // navigation.navigate('List');
   };
 
   useEffect(() => {
@@ -207,6 +211,7 @@ function EditMedicine({route}) {
           onChangeText={text => setMedicineName(text)}
           mode="flat"
           style={styles.text_input}
+          disabled={true}
         />
         <Text style={styles.input_text}>약 제형을 선택하세요</Text>
         <RNPickerSelect
@@ -308,7 +313,7 @@ function EditMedicine({route}) {
                     open={timeOpen[idx]}
                     date={
                       periodicList[idx]
-                        ? periodicList[idx]
+                        ? getIncorrectKRtime(periodicList[idx])
                         : new Date(
                             today.getFullYear(),
                             today.getMonth(),

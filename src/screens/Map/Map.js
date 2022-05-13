@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Linking,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {Text, Button, List} from 'react-native-paper';
 import MapView, {PROVIDER_GOOGLE, Marker, Overlay} from 'react-native-maps';
@@ -160,10 +161,11 @@ function Map() {
   const [location, setLocation] = useState();
   const [middle, setMiddle] = useState();
   const ref = useRef();
+
   useEffect(() => {
     requestPermission().then(result => {
       // console.log({result});
-      if (result == 'granted') {
+      if (result === 'granted') {
         Geolocation.getCurrentPosition(
           pos => {
             setLocation(pos.coords);
@@ -181,69 +183,72 @@ function Map() {
     });
   }, []);
 
-  if (!location) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
   return (
     <>
-      <View style={{flex: 1}}>
-        <MapView
-          style={{flex: 1}}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-          onRegionChange={region => {
-            setLocation({
-              latitude: region.latitude,
-              longitude: region.longitude,
-            });
-            setMiddle({
-              latitude: region.latitude,
-              longitude: region.longitude,
-            });
-          }}
-          onRegionChangeComplete={region => {
-            setLocation({
-              latitude: region.latitude,
-              longitude: region.longitude,
-            });
-            setMiddle({
-              latitude: region.latitude,
-              longitude: region.longitude,
-            });
-            // console.log(middle.latitude, middle.longitude);
-            // console.log(region.latitude, region.longitude);
-            getNearby(middle.latitude, middle.longitude);
+      {location ? (
+        <View style={{flex: 1}}>
+          <MapView
+            style={{flex: 1}}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            onRegionChange={region => {
+              setLocation({
+                latitude: region.latitude,
+                longitude: region.longitude,
+              });
+              setMiddle({
+                latitude: region.latitude,
+                longitude: region.longitude,
+              });
+            }}
+            onRegionChangeComplete={region => {
+              setLocation({
+                latitude: region.latitude,
+                longitude: region.longitude,
+              });
+              setMiddle({
+                latitude: region.latitude,
+                longitude: region.longitude,
+              });
+              // console.log(middle.latitude, middle.longitude);
+              // console.log(region.latitude, region.longitude);
+              getNearby(middle.latitude, middle.longitude);
+            }}>
+            {drawMarkers()}
+          </MapView>
+          <Button
+            mode="contained"
+            onPress={() => {
+              ref.current.show();
+            }}>
+            주변 수거처 목록 보기
+          </Button>
+          <DraggablePanel
+            ref={ref}
+            expandable={true}
+            hideOnPressOutside={true}
+            hideOnBackButtonPressed={true}
+            scrl>
+            <ScrollView>{listMarkers()}</ScrollView>
+          </DraggablePanel>
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          {drawMarkers()}
-        </MapView>
-        <Button
-          mode="contained"
-          onPress={() => {
-            ref.current.show();
-          }}>
-          주변 수거처 목록 보기
-        </Button>
-        <DraggablePanel
-          ref={ref}
-          expandable={true}
-          hideOnPressOutside={true}
-          hideOnBackButtonPressed={true}
-          scrl>
-          <ScrollView>{listMarkers()}</ScrollView>
-        </DraggablePanel>
-      </View>
+          <ActivityIndicator size="large" color="#85DEDC" />
+        </View>
+      )}
     </>
   );
 }
