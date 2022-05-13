@@ -74,6 +74,7 @@ const drawMarkers = () => {
       }}
       title={doc.data().name}
       description={doc.data().address + '\n' + doc.data().telephone}
+      image={require('../../assets/images/marker.png')}
     />
   ));
 };

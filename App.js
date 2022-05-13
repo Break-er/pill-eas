@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View} from 'react-native';
+import {View, Button} from 'react-native';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
@@ -19,6 +19,7 @@ import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BackgroundFetch from 'react-native-background-fetch';
+import Notifications from './Notifications';
 
 const theme = {
   ...DefaultTheme,
@@ -55,19 +56,17 @@ const App = () => {
         // Android options
         forceAlarmManager: false, // <-- Set true to bypass JobScheduler.
         requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
-        requiresCharging: false, // Default
-        requiresDeviceIdle: false, // Default
-        requiresBatteryNotLow: false, // Default
-        requiresStorageNotLow: false,
-      },
-      async taskId => {
-        console.log('[BackgroundFetch] task:', taskId);
-      },
-      async taskId => {
-        console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
-        BackgroundFetch.finish(taskId);
-      },
-    );
+        requiresCharging: false,       // Default
+        requiresDeviceIdle: false,     // Default
+        requiresBatteryNotLow: false,  // Default
+        requiresStorageNotLow: false
+      }, async (taskId) => {
+          console.log('[BackgroundFetch] task:', taskId);
+          BackgroundFetch.finish(taskId);
+      }, async (taskId) => {
+          console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
+          BackgroundFetch.finish(taskId);
+      });
 
     console.log('status:', status);
 
@@ -78,6 +77,11 @@ const App = () => {
     //   periodic: true
     // });
   };
+
+  // 이 함수가 실행되면 푸시 알림 날아옴
+  const setNotification = () => {
+    Notifications.scheduleNotification(new Date(Date.now() + 5*1000));
+  }
 
   useEffect(() => {
     try {
@@ -92,6 +96,10 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
+      <Button
+        title='Set notification after 5 seconds'
+        onPress={setNotification}
+      ></Button>
       <NavigationContainer theme={navTheme}>
         <Stack.Navigator initialRouteName="Main">
           <Stack.Screen
