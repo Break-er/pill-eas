@@ -15,7 +15,6 @@ import AddMedicine from './src/screens/AddMedicine/AddMedicine';
 import EditMedicine from './src/screens/EditMedicine/EditMedicine';
 import LoginScreen from './src/screens/Login/Login';
 import SplashScreen from 'react-native-splash-screen';
-import InformationScreen from './src/screens/Information/Information';
 import BottomNav from './src/components/BottomNav/BottomNav';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -152,17 +151,6 @@ const App = () => {
                 backgroundColor: '#ffffff',
               },
               headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Info"
-            component={InformationScreen}
-            options={{
-              headerTitle: '',
-              headerRight: () => <Header />,
-              headerStyle: {
-                backgroundColor: '#ffffff',
-              },
             }}
           />
         </Stack.Navigator>
