@@ -134,9 +134,9 @@ function AddMedicine() {
 
   const onSubmit = () => {
     let tmp = periodicList.slice(0, medicineCount);
-    for (var i = 0; i < medicineCount; i++) {
-      tmp[i] = getKRtime(periodicList[i]);
-    }
+    // for (var i = 0; i < medicineCount; i++) {
+    //   tmp[i] = getKRtime(periodicList[i]);
+    // }
     const res = {
       name: medicineName,
       type: medicineType,
@@ -163,7 +163,7 @@ function AddMedicine() {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.input_text}>약 이름을 입력하세요</Text>
         <TextInput
           value={medicineName}
@@ -195,7 +195,7 @@ function AddMedicine() {
             mode="date"
             onConfirm={date => {
               setStartOpen(false);
-              setStartDate(date);
+              setStartDate(new Date(date.setHours(0, 0, 0)));
               setStartChecked(true);
             }}
             onCancel={() => {
@@ -218,7 +218,7 @@ function AddMedicine() {
             mode="date"
             onConfirm={date => {
               setEndOpen(false);
-              setEndDate(date);
+              setEndDate(new Date(date.setHours(0, 0, 0)));
               setEndChecked(true);
             }}
             onCancel={() => {

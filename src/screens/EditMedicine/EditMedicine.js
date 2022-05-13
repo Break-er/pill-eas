@@ -204,7 +204,7 @@ function EditMedicine({route}) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.input_text}>약 이름을 입력하세요</Text>
         <TextInput
           value={medicineName}
@@ -238,7 +238,7 @@ function EditMedicine({route}) {
             mode="date"
             onConfirm={date => {
               setStartOpen(false);
-              setStartDate(date);
+              setStartDate(new Date(date.setHours(0, 0, 0)));
               setStartChecked(true);
             }}
             onCancel={() => {
@@ -261,7 +261,7 @@ function EditMedicine({route}) {
             mode="date"
             onConfirm={date => {
               setEndOpen(false);
-              setEndDate(date);
+              setEndDate(new Date(date.setHours(0, 0, 0)));
               setEndChecked(true);
             }}
             onCancel={() => {
