@@ -46,6 +46,7 @@ const navTheme = {
 };
 
 const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
   const Stack = createNativeStackNavigator();
 
   const initBackgroundFetch = async () => {
@@ -114,6 +115,8 @@ const App = () => {
       if (user) {
         setLoggedIn(true);
         let tmp = [];
+        let time_list = [];
+
         auth().onAuthStateChanged(user => {
           firestore()
             .collection('Users')
@@ -132,9 +135,9 @@ const App = () => {
                 end.setDate(end.getDate());
                 let cycle = tmp[i].cycle;
                 let curr = start;
+
                 while (curr <= end) {
                   if (compareDate(curr, new Date())) {
-                    let time_list = [];
                     for (let j = 0; j < tmp[i].periods.length; j++) {
                       let tmp_date = new Date(curr);
                       let year = tmp_date.getFullYear();
@@ -147,12 +150,14 @@ const App = () => {
                         new Date(year, month, date, hour, minutes, 0),
                       );
                     }
-                    console.log(time_list);
-                    // 현재시간이랑 time_list에 있는 시간이랑 같으면 알람 보내기
                   }
                   curr.setDate(curr.getDate() + cycle);
                 }
               }
+            })
+            .then(() => {
+              console.log(time_list);
+              // 현재시간이랑 time_list에 있는 시간이랑 같으면 알람 보내기
             });
         });
       } else {

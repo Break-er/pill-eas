@@ -151,7 +151,7 @@ function MedicineList({navigation}) {
       <ScrollView>
         <View style={styles.titleBar}>
           <TitleBar
-            title="복용 중 약 리스트"
+            title="복용 중인 약"
             subtitle="처방 받은 약을 입력하고, 복용 중인 약품을 확인합니다."
           />
         </View>

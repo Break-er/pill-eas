@@ -50,8 +50,10 @@ function Main({navigation}) {
     <View style={styles.container}>
       <View style={styles.main_header}>
         <View style={styles.header_textbox}>
-          <Text style={styles.header_title}>어떤 코너를</Text>
-          <Text style={styles.header_title}>이용하시겠습니까?</Text>
+          <Text style={styles.header_title_2}>
+            환경을 생각한 복용부터 처리까지
+          </Text>
+          <Text style={styles.header_title}>Pill:ease</Text>
         </View>
       </View>
       <View style={styles.surface_set}>
@@ -60,10 +62,10 @@ function Main({navigation}) {
             <View style={{flex: 1, flexDirection: 'row'}}>
               <View style={{width: '85%'}}>
                 {loggedIn ? (
-                  <Text style={styles.textbox_title}>복용 중 약 리스트</Text>
+                  <Text style={styles.textbox_title}>복용 중인 약</Text>
                 ) : (
                   <Text style={styles.textbox_title_disabled}>
-                    복용 중 약 리스트
+                    복용 중인 약
                   </Text>
                 )}
                 <Text style={styles.textbox}>
@@ -126,11 +128,15 @@ const styles = StyleSheet.create({
   },
 
   header_textbox: {
-    paddingTop: 120,
+    paddingTop: 140,
     paddingLeft: 20,
   },
   header_title: {
     fontSize: 25,
+    color: '#fff',
+  },
+  header_title_2: {
+    fontSize: 20,
     color: '#fff',
   },
   surface_set: {
