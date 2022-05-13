@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import TitleBar from '../../components/TitleBar/TitleBar';
 import Swiper from 'react-native-swiper';
-import { Button } from 'react-native-paper';
+import { Button, Chip } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -14,6 +14,8 @@ function MedicineCalendar() {
   const [periodState, setPeriodState] = useState({});
   const [currentDate, setCurrentDate] = useState('');
   const [usingData, setUsingData] = useState([]);
+  const [randNumber, setRandNumber] = useState(0);
+
 
   let dateArr = [];
   let startDate = ''
@@ -22,6 +24,7 @@ function MedicineCalendar() {
   let todayDate = '';
   const monthDate = [31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   const pickColor = ["#8AB5E6", "#85DEDC", "#8EDAAB", "#FAB7E3", "#E6BBFA", "#FAF1AC"]
+  let picker = pickColor[randNumber]
 
   useEffect(() => {
     auth().onAuthStateChanged(user => {
@@ -71,24 +74,26 @@ function MedicineCalendar() {
         });
     });
 
-
-  }, [])
+  }, [randNumber])
 
   function clickList(idx) {
     startDate = usingData[idx].start;
     endDate = usingData[idx].end;
-    
+
     setCurrentDate(startDate);
     duringDate = calDuringDate();
     makingPeriods();
   }
 
   function clearPeriods() {
-    startDate = '';
-    endDate = '';
-    duringDate = [];
-    setCurrentDate('');
-    setPeriodState({});
+
+    let tempNum = Math.floor(Math.random() * 6);
+
+    while (tempNum === randNumber) {
+      tempNum = Math.floor(Math.random() * 6);
+    }
+
+    setRandNumber(tempNum)
   }
 
   function calDuringDate() {
@@ -181,67 +186,60 @@ function MedicineCalendar() {
 
     let markPeriods = {};
 
-    const randNum = Math.floor(Math.random() * 6);
+    let addPeriods = null;
 
-    new Promise((resolve, reject) => {
+    if (startDate !== undefined) {
+      addPeriods = {
+        'temp': { startingDay: null, endingDay: null, color: '' }
+      }
+      const NEW_NAME = startDate;
+      const OLD_NAME = 'temp';
+      Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
+      delete addPeriods[OLD_NAME];
+      Object.assign(markPeriods, addPeriods);
+    }
 
-      let addPeriods = null;
-
-      if (startDate !== undefined) {
+    if (duringDate !== undefined) {
+      for (let i = 0; i < duringDate.length; i++) {
         addPeriods = {
           'temp': { startingDay: null, endingDay: null, color: '' }
         }
-        const NEW_NAME = startDate;
-        const OLD_NAME = 'temp';
-        Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
-        delete addPeriods[OLD_NAME];
-        Object.assign(markPeriods, addPeriods);
-      }
-
-      if (duringDate !== undefined) {
-        for (let i = 0; i < duringDate.length; i++) {
-          addPeriods = {
-            'temp': { startingDay: null, endingDay: null, color: '' }
-          }
-          const NEW_NAME = duringDate[i];
-          const OLD_NAME = "temp";
-          Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
-          delete addPeriods[OLD_NAME];
-          Object.assign(markPeriods, addPeriods);
-        }
-      }
-
-      if (endDate !== undefined) {
-        addPeriods = {
-          'temp': { startingDay: null, endingDay: null, color: '' }
-        }
-
-        const NEW_NAME = endDate;
+        const NEW_NAME = duringDate[i];
         const OLD_NAME = "temp";
         Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
         delete addPeriods[OLD_NAME];
         Object.assign(markPeriods, addPeriods);
-
-        markPeriods[startDate]["startingDay"] = true;
-        markPeriods[startDate]["endingDay"] = false;
-        markPeriods[startDate]["color"] = pickColor[randNum];
-
-        for (let i = 0; i < duringDate.length; i++) {
-          markPeriods[duringDate[i]]["startingDay"] = false;
-          markPeriods[duringDate[i]]["endingDay"] = false;
-          markPeriods[duringDate[i]]["color"] = pickColor[randNum];
-        }
-
-        markPeriods[endDate]["startingDay"] = false;
-        markPeriods[endDate]["endingDay"] = true;
-        markPeriods[endDate]["color"] = pickColor[randNum];
-
       }
-      resolve();
-    })
-      .then(() => {
-        setPeriodState(markPeriods);
-      })
+    }
+
+    if (endDate !== undefined) {
+      addPeriods = {
+        'temp': { startingDay: null, endingDay: null, color: '' }
+      }
+
+      const NEW_NAME = endDate;
+      const OLD_NAME = "temp";
+      Object.defineProperty(addPeriods, NEW_NAME, Object.getOwnPropertyDescriptor(addPeriods, OLD_NAME));
+      delete addPeriods[OLD_NAME];
+      Object.assign(markPeriods, addPeriods);
+
+      markPeriods[startDate]["startingDay"] = true;
+      markPeriods[startDate]["endingDay"] = false;
+      markPeriods[startDate]["color"] = pickColor[randNumber];
+
+      for (let i = 0; i < duringDate.length; i++) {
+        markPeriods[duringDate[i]]["startingDay"] = false;
+        markPeriods[duringDate[i]]["endingDay"] = false;
+        markPeriods[duringDate[i]]["color"] = pickColor[randNumber];
+      }
+
+      markPeriods[endDate]["startingDay"] = false;
+      markPeriods[endDate]["endingDay"] = true;
+      markPeriods[endDate]["color"] = pickColor[randNumber];
+
+    }
+
+    setPeriodState(markPeriods);
   }
 
   return (
@@ -269,15 +267,16 @@ function MedicineCalendar() {
         markedDates={periodState}
       />
 
-      <Swiper showsButtons={true} showsPagination={false} loop={false} onIndexChanged={() => { clearPeriods(); }}>
+      <Swiper onIndexChanged={() => { clearPeriods(); }} showsButtons={true} showsPagination={false} loop={false} bounces={true}>
         {usingData && usingData.map((item, idx) => (
           <View style={styles.slide} key={idx}>
-            <Button contentStyle={styles.listDesign} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
+            <Button contentStyle={{ width: '100%', height: 50, backgroundColor: picker }} labelStyle={styles.listText} mode="contained" onPress={() => clickList(idx)}>
               {item.name}
             </Button>
           </View>
         ))}
       </Swiper>
+
     </View>
   );
 }
@@ -297,12 +296,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-  },
-
-  listDesign: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#8AB5E6'
   },
 
   listText: {
