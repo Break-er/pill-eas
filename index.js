@@ -9,6 +9,7 @@ import messaging from '@react-native-firebase/messaging';
 import BackgroundFetch from "react-native-background-fetch";
 import firestore from '@react-native-firebase/firestore';
 import Notifications from './Notifications';
+import auth from '@react-native-firebase/auth';
 import { TimelineList } from 'react-native-calendars';
 
 // Register background handler
@@ -83,7 +84,7 @@ function getTimeLine() {
             let current = Date.now();
             for (let i=0; i < time_list.length(); i++) {
               let date = time_list[i];
-              if (date.getMinutes() - 15 <= current.getMinutes() && date.getMinutes() + 15 >= current.getMinutes()) {
+              if (date.getMinutes() >= current.getMinutes() -15  || date.getMinutes() <= current.getMinutes() + 15) {
                 setNotification(Date.now() + 3*1000);
                 break;
               }
