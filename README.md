@@ -3,6 +3,9 @@
 
 <img src="https://user-images.githubusercontent.com/68578916/167850371-1247d797-f7ea-48f0-a15d-6e22c59cc91d.svg" width="150"/>
 
+ ### 환경을 생각한 복용부터 처리까지   
+
+
 **Pill:ease(필리즈)** 는 ***2022 환경데이터 활용 아이디어 공모전***을 위한 프로젝트로, 환경을 생각한 복용부터 처리까지 도와주는 서비스를 제공한다. 올바른 약 복용부터 남은 약에 대한 처리 방법을 사용자에게 알림으로써 폐의약품 배출과 관련한 시민들의 인식을 개선하고, 안전한 처리로 국민건강과 환경을 지킬 수 있을 것이다.  
 
 **Pill:ease** is a project for ***2022 Environmental Data Utilization Idea Contest*** and provides a service that helps from taking the medicines to processing to take care of environment. By informing users of how to handle the remaining drugs from taking the right drugs to the right ones, people will be able to improve their awareness of the discharge of waste drugs and protect national health and the environment through safe treatment.
