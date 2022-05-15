@@ -36,7 +36,7 @@ function compareDate(date1, date2) {
 function getTimeLine() {
   auth().onAuthStateChanged(user => {
     if (user) {
-      setLoggedIn(true);
+      // setLoggedIn(true);
       let tmp = [];
       let time_list = [];
 
@@ -81,7 +81,7 @@ function getTimeLine() {
           .then(() => {
             console.log(time_list);
             // 현재시간이랑 time_list에 있는 시간이랑 같으면 알람 보내기
-            let current = Date.now();
+            let current = new Date(Date.now());
             for (let i=0; i < time_list.length(); i++) {
               let date = time_list[i];
               if (date.getMinutes() >= current.getMinutes() -15  || date.getMinutes() <= current.getMinutes() + 15) {
@@ -91,8 +91,6 @@ function getTimeLine() {
             }
           });
       });
-    } else {
-      setLoggedIn(false);
     }
   });
 }
@@ -107,7 +105,8 @@ let SendNotifications = async(event) => {
   }
   console.log('[BackgroundFetch HeadlessTask] start: ', taskId);
   // 사용자 복용 약 시간 리스트 불러와서 현재 시간과 비교 후 알림 전송
-  getTimeLine();
+  // getTimeLine();
+  setNotification();
   console.log('알림이 전송되었습니다.');
   BackgroundFetch.finish(taskId);
 }

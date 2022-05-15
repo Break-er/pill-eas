@@ -67,7 +67,8 @@ const App = () => {
       async taskId => {
         console.log('[BackgroundFetch] task:', taskId);
         // 사용자 복용 약 시간 리스트 불러와서 현재 시간과 비교 후 알림 전송
-        getTimeLine();
+        // getTimeLine();
+        setNotification();
         BackgroundFetch.finish(taskId);
       },
       async taskId => {
@@ -139,7 +140,7 @@ const App = () => {
             .then(() => {
               console.log(time_list);
               // 현재시간이랑 time_list에 있는 시간이랑 같으면 알람 보내기
-              let current = Date.now();
+              let current = new Date(Date.now());
               for (let i=0; i < time_list.length(); i++) {
                 let date = time_list[i];
                 if (date.getMinutes() >= current.getMinutes() -15  || date.getMinutes() <= current.getMinutes() + 15) {
