@@ -34,7 +34,7 @@ class Notifications {
         PushNotification.localNotificationSchedule({
             channelId: 'pillease',
             title: '약 복용 알림',
-            message: '약 먹을 시간입니다!',
+            message: '약 드실 시간입니다!',
             date,
         })
     }
