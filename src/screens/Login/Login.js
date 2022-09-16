@@ -29,7 +29,8 @@ function Login({route}) {
 
     auth().onAuthStateChanged(user => {
       let userDoc = null;
-      userDoc = userCollection
+      if (user) {
+        userDoc = userCollection
         .doc(user.uid)
         .get()
         .then(docSnapshot => {
@@ -38,6 +39,7 @@ function Login({route}) {
             userCollection.doc(user.uid).set({fillList: []});
           }
         });
+      }
     });
     if (checkLoggedIn) {
       Alert.alert('로그인 되었습니다.');

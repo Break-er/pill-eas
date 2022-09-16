@@ -94,7 +94,8 @@ function MedicineList({navigation}) {
 
   const onPressDeleteConfirm = () => {
     auth().onAuthStateChanged(user => {
-      firestore()
+      if (user) {
+        firestore()
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
@@ -105,13 +106,15 @@ function MedicineList({navigation}) {
           Alert.alert('삭제되었습니다.');
           navigation.reset({index: 0, routes: [{name: 'List'}]});
         });
+      }
     });
   };
 
   useEffect(() => {
     let tmp = [];
     auth().onAuthStateChanged(user => {
-      firestore()
+      if (user) {
+        firestore()
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
@@ -124,13 +127,15 @@ function MedicineList({navigation}) {
         .then(() => {
           tmp && setMedicineList(tmp.reverse());
         });
+      }
     });
   }, [searchQuery]);
 
   useEffect(() => {
     let tmp = [];
     auth().onAuthStateChanged(user => {
-      firestore()
+      if (user) {
+        firestore()
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
@@ -143,6 +148,7 @@ function MedicineList({navigation}) {
         .then(() => {
           tmp && setMedicineList(tmp.reverse());
         });
+      }
     });
   }, [isFocused]);
 
@@ -253,7 +259,7 @@ function MedicineList({navigation}) {
             onDismiss={hideModal}
             contentContainerStyle={containerStyle}
             style={styles.modalStyle}>
-            <Text style={{padding: 20}}>선택한 약을 삭제하시겠습니까?</Text>
+            <Text style={{padding: 20, color: 'gray'}}>선택한 약을 삭제하시겠습니까?</Text>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Text>
                 <Button
@@ -300,6 +306,7 @@ const styles = StyleSheet.create({
 
   listItem: {
     marginBottom: 20,
+    color: 'gray',
   },
 
   listItemButton: {

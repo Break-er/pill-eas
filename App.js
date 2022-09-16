@@ -6,8 +6,8 @@
  * @flow strict-local
  */
 
-import React, {useState, useEffect} from 'react';
-import {View, Button} from 'react-native';
+import React, {useState, useEffect } from 'react';
+import {LogBox} from 'react-native';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Header from './src/components/Header/Header';
 import MainScreen from './src/screens/Main/Main';
@@ -22,6 +22,8 @@ import BackgroundFetch from 'react-native-background-fetch';
 import Notifications from './Notifications';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+
+LogBox.ignoreAllLogs();
 
 const theme = {
   ...DefaultTheme,

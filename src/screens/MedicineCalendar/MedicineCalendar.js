@@ -29,50 +29,52 @@ function MedicineCalendar() {
 
   useEffect(() => {
     auth().onAuthStateChanged(user => {
-      const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
-      pillList.then(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          data.push(documentSnapshot.data());
-        });
-      })
-        .then(() => {
-          let today = new Date();
-          let year = today.getFullYear(); // 년도
-          let month = today.getMonth() + 1;  // 월
-          let date = today.getDate();  // 날짜
-          todayDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
-
-          if (currentDate == todayDate) {
-            setCurrentDate(todayDate);
-          }
-
-          duringDate = calDuringDate();
-
-          let tempArr = []
-
-          for (let i = 0; i < data.length; i++) {
-
-            let tempStart = new Date((data[i].startDate.seconds) * 1000);
-            let tempYear_s = tempStart.getFullYear(); // 년도
-            let tempMonth_s = tempStart.getMonth() + 1;  // 월
-            let tempDate_s = tempStart.getDate();  // 날짜
-            let parsingDate_s = `${tempYear_s}-${tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s}-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
-
-            let tempEnd = new Date((data[i].endDate.seconds) * 1000);
-            let tempYear_e = tempEnd.getFullYear(); // 년도
-            let tempMonth_e = tempEnd.getMonth() + 1;  // 월
-            let tempDate_e = tempEnd.getDate();  // 날짜
-            let parsingDate_e = `${tempYear_e}-${tempMonth_e >= 10 ? tempMonth_e : '0' + tempMonth_e}-${tempDate_e >= 10 ? tempDate_e : '0' + tempDate_e}`;
-
-            const tempData = {
-              name: data[i].name,
-              start: parsingDate_s,
-              end: parsingDate_e,
+      if (user) {
+        const pillList = firestore().collection('Users').doc(user.uid).collection('pillList').get();
+        pillList.then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+            data.push(documentSnapshot.data());
+          });
+        })
+          .then(() => {
+            let today = new Date();
+            let year = today.getFullYear(); // 년도
+            let month = today.getMonth() + 1;  // 월
+            let date = today.getDate();  // 날짜
+            todayDate = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? date : '0' + date}`;
+  
+            if (currentDate == todayDate) {
+              setCurrentDate(todayDate);
             }
-            tempArr.push(tempData)
-          }
-          setUsingData(tempArr);
-        });
+  
+            duringDate = calDuringDate();
+  
+            let tempArr = []
+  
+            for (let i = 0; i < data.length; i++) {
+  
+              let tempStart = new Date((data[i].startDate.seconds) * 1000);
+              let tempYear_s = tempStart.getFullYear(); // 년도
+              let tempMonth_s = tempStart.getMonth() + 1;  // 월
+              let tempDate_s = tempStart.getDate();  // 날짜
+              let parsingDate_s = `${tempYear_s}-${tempMonth_s >= 10 ? tempMonth_s : '0' + tempMonth_s}-${tempDate_s >= 10 ? tempDate_s : '0' + tempDate_s}`;
+  
+              let tempEnd = new Date((data[i].endDate.seconds) * 1000);
+              let tempYear_e = tempEnd.getFullYear(); // 년도
+              let tempMonth_e = tempEnd.getMonth() + 1;  // 월
+              let tempDate_e = tempEnd.getDate();  // 날짜
+              let parsingDate_e = `${tempYear_e}-${tempMonth_e >= 10 ? tempMonth_e : '0' + tempMonth_e}-${tempDate_e >= 10 ? tempDate_e : '0' + tempDate_e}`;
+  
+              const tempData = {
+                name: data[i].name,
+                start: parsingDate_s,
+                end: parsingDate_e,
+              }
+              tempArr.push(tempData)
+            }
+            setUsingData(tempArr);
+          });
+      }
     });
 
   }, [randNumber])

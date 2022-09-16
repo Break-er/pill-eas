@@ -150,12 +150,14 @@ function AddMedicine() {
 
     let addPill = null;
     auth().onAuthStateChanged(user => {
-      addPill = firestore()
+      if (user) {
+        addPill = firestore()
         .collection('Users')
         .doc(user.uid)
         .collection('pillList')
         .doc(medicineName);
       addPill.set(res);
+      }
     });
     Alert.alert('저장되었습니다');
     navigation.navigate('List');
@@ -177,6 +179,7 @@ function AddMedicine() {
           items={types}
           placeholder={{}}
           useNativeAndroidPickerStyle={false}
+          style={pickerSelectStyles}
         />
         <Text style={styles.input_text}>
           복용 시작 날짜와 종료 날짜를 선택하세요
@@ -236,6 +239,7 @@ function AddMedicine() {
           items={cycle}
           placeholder={{}}
           useNativeAndroidPickerStyle={false}
+          style={pickerSelectStyles}
         />
         <Text style={styles.input_text}>하루에 몇 번 복용하시나요?</Text>
         <RNPickerSelect
@@ -243,6 +247,7 @@ function AddMedicine() {
           items={counts}
           placeholder={{}}
           useNativeAndroidPickerStyle={false}
+          style={pickerSelectStyles}
         />
         {medicineCount > 0 && (
           <Text style={styles.input_text}>언제 복용하실 예정인가요?</Text>
@@ -329,6 +334,7 @@ const styles = StyleSheet.create({
   },
   input_text: {
     paddingTop: 20,
+    color: 'gray'
   },
   datebutton_outer: {
     flexDirection: 'row',
@@ -342,10 +348,22 @@ const styles = StyleSheet.create({
   },
   text_input: {
     backgroundColor: '#fff',
+    fontSize: 20
   },
   submit_btn: {
     marginTop: 30,
   },
 });
+
+const pickerSelectStyles = StyleSheet.create({
+  inputAndroid: {
+    fontSize: 15,
+    color: '#424242',
+    padding: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#D8D8D8',
+    paddingBottom: 1
+  }
+})
 
 export default AddMedicine;
