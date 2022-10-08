@@ -245,6 +245,7 @@ function Map() {
             expandable={true}
             hideOnPressOutside={true}
             hideOnBackButtonPressed={true}
+            overlayOpacity={0.08}
             scrl>
             <ScrollView>{listMarkers()}</ScrollView>
           </DraggablePanel>
