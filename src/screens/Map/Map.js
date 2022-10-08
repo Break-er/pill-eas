@@ -122,6 +122,7 @@ const listMarkers = () => {
             <Ionicons
               name="ios-location"
               size={30}
+              color='gray'
               style={{marginTop: 20, marginRight: 10}}
             />
           )}
