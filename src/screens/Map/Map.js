@@ -125,21 +125,22 @@ const listMarkers = () => {
               style={{marginTop: 20, marginRight: 10}}
             />
           )}
+          onPress={() => animateMap(item.data().latitude, item.data().longitude)}
         />
       ))}
     </View>
   );
-  // return nearby.map(doc => (
-  //   <Text key={doc.id}>
-  //     {doc.data().name +
-  //       '주소 : ' +
-  //       doc.data().address +
-  //       '\n연락처 : ' +
-  //       doc.data().telephone +
-  //       '\n'}
-  //   </Text>
-  // ));
 };
+
+const animateMap = (latitude, longitude) => {
+  let r = {
+    latitude: latitude,
+    longitude: longitude,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005
+  };
+  this.mapView.animateToRegion(r, 1000);
+}
 
 // for Batch Write
 /* const db = firebase.firestore()
@@ -188,6 +189,9 @@ function Map() {
       {location ? (
         <View style={{flex: 1}}>
           <MapView
+            ref={(ref) => {
+              this.mapView = ref
+            }}
             style={{flex: 1}}
             provider={PROVIDER_GOOGLE}
             initialRegion={{
