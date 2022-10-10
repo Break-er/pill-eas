@@ -56,111 +56,118 @@ function getNearby(latitude, longitude) {
       if (
         (doc.data().latitude - latitude) ** 2 +
           (doc.data().longitude - longitude) ** 2 <=
-        0.00007
+        0.00003
       ) {
         nearby.push(doc);
       }
     });
 }
 
-// 중점 기준 인근 수거처 마커를 맵에 표시
-const drawMarkers = () => {
-  return nearby.map(doc => (
-    <Marker
-      key={doc.id}
-      coordinate={{
-        latitude: doc.data().latitude,
-        longitude: doc.data().longitude,
-      }}
-      title={doc.data().name}
-      description={doc.data().address + '\n' + doc.data().telephone}
-      image={require('../../assets/images/marker.png')}
-    />
-  ));
-};
-
-// 인근 수거처 정보를 Expanded panel에 표시
-const listMarkers = () => {
-  if (nearby.length === 0) {
-    return (
-      <View style={styles.empty_text_box}>
-        <Text style={styles.empty_text}>
-          주변에 폐의약품 수거처가 없습니다!
-        </Text>
-      </View>
-    );
-  }
-  return (
-    <View style={{marginTop: 10, marginBottom: 10}}>
-      {nearby.map((item, idx) => (
-        <List.Item
-          key={idx}
-          title={item.data().name}
-          descriptionNumberOfLines={10}
-          descriptionStyle={{flexShrink: 1}}
-          description={
-            <Text style={{fontSize: 14}}>
-              {item.data().address + '\n'}
-              <Pressable>
-                {({pressed}) => (
-                  <Text
-                    style={{
-                      color: pressed ? '#000000' : '#999999',
-                      fontSize: 14,
-                    }}
-                    onPress={() =>
-                      Linking.openURL(`tel:${item.data().telephone}`)
-                    }>
-                    {item.data().telephone}
-                  </Text>
-                )}
-              </Pressable>
-            </Text>
-          }
-          style={styles.list_item}
-          left={props => (
-            <Ionicons
-              name="ios-location"
-              size={30}
-              style={{marginTop: 20, marginRight: 10}}
-            />
-          )}
-        />
-      ))}
-    </View>
-  );
-  // return nearby.map(doc => (
-  //   <Text key={doc.id}>
-  //     {doc.data().name +
-  //       '주소 : ' +
-  //       doc.data().address +
-  //       '\n연락처 : ' +
-  //       doc.data().telephone +
-  //       '\n'}
-  //   </Text>
-  // ));
-};
+state = []
 
 // for Batch Write
-/* const db = firebase.firestore()
-const batch = firestore().batch()
+// const db = firebase.firestore()
+// const batch = firestore().batch()
 
-function batchWrite() {
-  state.forEach((doc) => {
-    let docRef = db.collection("Places").doc();
-    batch.set(docRef, doc);
-  });
-  console.log("Ready to Commit...")
-}
+// function batchWrite() {
+//   state.forEach((doc) => {
+//     let docRef = db.collection("Places").doc();
+//     batch.set(docRef, doc);
+//   });
+//   console.log("Ready to Commit...")
+// }
 
-function batchCommit() {
-  batch.commit().then(()=>console.log("Successfully Added!"));
-} */
+// function batchCommit() {
+//   batch.commit().then(()=>console.log("Successfully Added!"));
+// }
 
 function Map() {
   const [location, setLocation] = useState();
   const [middle, setMiddle] = useState();
   const ref = useRef();
+  const markers = useRef([]);
+
+  // 중점 기준 인근 수거처 마커를 맵에 표시
+  const drawMarkers = () => {
+    return nearby.map((doc) => (
+      <Marker
+        key={doc.data().id}
+        ref={(ref) => markers.current[doc.data().id] = ref}
+        coordinate={{
+          latitude: doc.data().latitude,
+          longitude: doc.data().longitude,
+        }}
+        title={doc.data().name}
+        description={doc.data().address + '\n' + doc.data().telephone}
+        image={require('../../assets/images/marker.png')}
+      />
+    ));
+  };
+
+  // 인근 수거처 정보를 Expanded panel에 표시
+  const listMarkers = () => {
+    if (nearby.length === 0) {
+      return (
+        <View style={styles.empty_text_box}>
+          <Text style={styles.empty_text}>
+            주변에 폐의약품 수거처가 없습니다!
+          </Text>
+        </View>
+      );
+    }
+    return (
+      <View style={{marginTop: 10, marginBottom: 10}}>
+        {nearby.map((item) => (
+          <List.Item
+            key={item.data().id}
+            title={item.data().name}
+            descriptionNumberOfLines={10}
+            descriptionStyle={{flexShrink: 1}}
+            description={
+              <Text style={{fontSize: 14}}>
+                {item.data().address + '\n'}
+                <Pressable>
+                  {({pressed}) => (
+                    <Text
+                      style={{
+                        color: pressed ? '#000000' : '#999999',
+                        fontSize: 14,
+                      }}
+                      onPress={() =>
+                        Linking.openURL(`tel:${item.data().telephone}`)
+                      }>
+                      {item.data().telephone}
+                    </Text>
+                  )}
+                </Pressable>
+              </Text>
+            }
+            style={styles.list_item}
+            left={props => (
+              <Ionicons
+                name="ios-location"
+                size={30}
+                color='gray'
+                style={{marginTop: 20, marginRight: 10}}
+              />
+            )}
+            onPress={() => animateMap(item.data().latitude, item.data().longitude, item.data().id)}
+          />
+        ))}
+      </View>
+    );
+  };
+
+  const animateMap = (latitude, longitude, id) => {
+    let r = {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005
+    };
+    this.mapView.animateToRegion(r, 1000);
+    markers.current[id].showCallout();
+  }
 
   useEffect(() => {
     requestPermission().then(result => {
@@ -188,6 +195,9 @@ function Map() {
       {location ? (
         <View style={{flex: 1}}>
           <MapView
+            ref={(ref) => {
+              this.mapView = ref
+            }}
             style={{flex: 1}}
             provider={PROVIDER_GOOGLE}
             initialRegion={{
@@ -235,6 +245,7 @@ function Map() {
             expandable={true}
             hideOnPressOutside={true}
             hideOnBackButtonPressed={true}
+            overlayOpacity={0.08}
             scrl>
             <ScrollView>{listMarkers()}</ScrollView>
           </DraggablePanel>
