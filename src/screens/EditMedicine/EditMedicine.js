@@ -250,6 +250,7 @@ function EditMedicine({route}) {
             title="복용 시작 날짜를 선택하세요"
             confirmText="확인"
             cancelText="취소"
+            textColor='white'
           />
           <Button
             mode="text"
@@ -274,6 +275,7 @@ function EditMedicine({route}) {
             confirmText="확인"
             cancelText="취소"
             minimumDate={new Date()}
+            textColor='white'
           />
         </View>
         <Text style={styles.input_text}>복용 주기를 선택하세요 (단위: 일)</Text>
@@ -336,10 +338,11 @@ function EditMedicine({route}) {
                     onCancel={() => {
                       getTimeSelectElementClose(idx);
                     }}
-                    title="복용 시작 날짜를 선택하세요"
+                    title="복용 시간을 선택하세요."
                     confirmText="확인"
                     cancelText="취소"
                     minuteInterval={30}
+                    textColor='white' 
                   />
                 )}
               </View>

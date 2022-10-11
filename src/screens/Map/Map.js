@@ -56,7 +56,7 @@ function getNearby(latitude, longitude) {
       if (
         (doc.data().latitude - latitude) ** 2 +
           (doc.data().longitude - longitude) ** 2 <=
-        0.00003
+        0.0001
       ) {
         nearby.push(doc);
       }

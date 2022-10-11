@@ -75,7 +75,7 @@ function Main({navigation}) {
               <View style={styles.icon}>
                 <Ionicons
                   name="ios-list-circle-outline"
-                  style={{fontSize: 45}}
+                  style={{fontSize: 45, color: 'gray'}}
                 />
               </View>
             </View>
@@ -95,7 +95,7 @@ function Main({navigation}) {
                 </Text>
               </View>
               <View style={styles.icon}>
-                <Ionicons name="ios-calendar-outline" style={{fontSize: 45}} />
+                <Ionicons name="ios-calendar-outline" style={{fontSize: 45, color: 'gray'}} />
               </View>
             </View>
           </Surface>
@@ -110,7 +110,7 @@ function Main({navigation}) {
                 </Text>
               </View>
               <View style={styles.icon}>
-                <Ionicons name="ios-map-outline" style={{fontSize: 45}} />
+                <Ionicons name="ios-map-outline" style={{fontSize: 45, color: 'gray'}} />
               </View>
             </View>
           </Surface>

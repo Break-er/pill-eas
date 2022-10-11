@@ -56,7 +56,7 @@ function Header() {
                 onDismiss={hideModal}
                 contentContainerStyle={containerStyle}>
                 <View>
-                  <Text style={{color: '#999999'}}>
+                  <Text style={{color: '#999999', fontSize: 18}}>
                     <Ionicons
                       name="help-circle-outline"
                       size={15}
@@ -64,12 +64,12 @@ function Header() {
                     />{' '}
                     올바른 의약품 보관 및 폐기법{'\n'}
                   </Text>
-                  <Text style={{color: '#999999'}}>
+                  <Text style={{color: '#999999', fontSize: 16}}>
                     폐의약품이란 가정에서 먹다 남은 약 중에서 유효기한이
-                    지났거나 변질, 부패 등으로 사용할 수 없는 의약품이다.
+                    지났거나 변질, 부패 등으로 사용할 수 없는 의약품입니다.
                     {'\n'}
                   </Text>
-                  <Text style={{color: '#999999'}}>
+                  <Text style={{color: '#999999', fontSize: 16}}>
                     - 약은 필요한 만큼 처방/구매하고, 유통기한을 반드시
                     확인하기!{'\n'}
                     상비약은 적시에 필요한 역할을 하지만, 이것저것 필요 이상으로
@@ -78,7 +78,7 @@ function Header() {
                     하니 습기가 없고 서늘한 곳에 두며 기한 내에 알맞게 복용하는
                     점 잊지 마세요!{'\n'}
                   </Text>
-                  <Text style={{color: '#999999'}}>
+                  <Text style={{color: '#999999', fontSize: 16}}>
                     - 남은 약들은 모아 가까운 약국에 가져다주기!{'\n'}
                     폐의약품 발생 시 유리 및 플라스틱 용기, 종이상자 등은 자체
                     분리수거 후 내용물만 배출해 알약은 알약끼리, 캡슐은
@@ -87,7 +87,7 @@ function Header() {
                     플라스틱 병 등에 담아 폐의약품 수거함이 있는 약국 또는
                     보건소에 가져다주면 됩니다.{'\n'}
                   </Text>
-                  <Text style={{color: '#999999'}}>
+                  <Text style={{color: '#999999', fontSize: 16}}>
                     - 약을 제외한 약봉투 및 포장 케이스는 분리수거법에 따라 각각
                     알맞게 버리기!{'\n'}월 1회 보건소 및 구청 청소차가
                     거점약국을 다니며 약국에 모인 폐의약품을 수거,

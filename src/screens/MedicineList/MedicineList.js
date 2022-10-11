@@ -193,7 +193,7 @@ function MedicineList({navigation}) {
                     key={idx}>
                     <List.Item
                       title={() => (
-                        <View style={{marginTop: -10}}>
+                        <View style={{marginTop: -5, marginLeft: -20}}>
                           <Text style={styles.listItem}>
                             약 제형 : {getTypeName(item.type)}
                           </Text>
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   },
 
   listItem: {
-    marginBottom: 20,
+    marginBottom: 15,
     color: 'gray',
   },
 
