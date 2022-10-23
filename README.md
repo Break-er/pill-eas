@@ -1,14 +1,13 @@
 # Pill:ease (필리즈)
 
-
 <img src="https://user-images.githubusercontent.com/68578916/167850371-1247d797-f7ea-48f0-a15d-6e22c59cc91d.svg" width="150"/>
 
  ### 환경을 생각한 복용부터 처리까지   
 
 
-**Pill:ease(필리즈)** 는 ***제 5회 KB국민은행 소프트웨어 경진대회(KBSC)***를 위한 프로젝트로, 환경을 생각한 복용부터 처리까지 도와주는 서비스를 제공한다. 올바른 약 복용부터 남은 약에 대한 처리 방법을 사용자에게 알림으로써 폐의약품 배출과 관련한 시민들의 인식을 개선하고, 안전한 처리로 국민건강과 환경을 지킬 수 있을 것이다.  
+**Pill:ease(필리즈)** 는 환경을 생각한 복용부터 처리까지 도와주는 서비스를 제공한다. 올바른 약 복용부터 남은 약에 대한 처리 방법을 사용자에게 알림으로써 폐의약품 배출과 관련한 시민들의 인식을 개선하고, 안전한 처리로 국민건강과 환경을 지킬 수 있을 것이다.  
 
-**Pill:ease** is a project for ***5th KBbank Software Competition*** and provides a service that helps from taking the medicines to processing to take care of environment. By informing users of how to handle the remaining drugs from taking the right drugs to the right ones, people will be able to improve their awareness of the discharge of waste drugs and protect national health and the environment through safe treatment.
+**Pill:ease** provides a service that helps from taking the medicines to processing to take care of environment. By informing users of how to handle the remaining drugs from taking the right drugs to the right ones, people will be able to improve their awareness of the discharge of waste drugs and protect national health and the environment through safe treatment.
 
 ## Table of Contents
 * [Getting Started](#getting-started)
@@ -52,12 +51,22 @@ $ react-native run-android // another terminal
 ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![Android Studio](https://img.shields.io/badge/Android%20Studio-3DDC84.svg?style=for-the-badge&logo=android-studio&logoColor=white)
 
-## Contributors
-All participants in this project are majoring in Computer Science Engieneering, Dongguk University🏫
+## Demo
+https://www.youtube.com/watch?v=vUDdXVjjg_s
 
-| Name             | Email                 | Github                           | Role      |
-|------------------|-----------------------|----------------------------------|-----------|
-| 👧🏻 DongYeon Kang | myjjue00@gmail.com    | https://github.com/dongyeon-0822 | BE |
-| 👱🏻‍♀️ Hyewon Kang  | gpffps369@gmail.com   | https://github.com/HyewonKkang   | FE |
-| 🧒🏻 Gunwoo Kim    | gun0005@naver.com     | https://github.com/Gu-nuu        | FE |
-| 👱🏻‍♂️ Taekyu Lee   | dnjsqls2008@gmail.com | https://github.com/leetaekyu2077 | BE  |
+## Contributors
+<table>
+    <tr>
+        <td align="center"><img src="https://github.com/dongyeon-0822.png" width="80"></td>
+        <td align="center"><img src="https://github.com/HyewonKkang.png" width="80">
+        </td>
+        <td align="center"><img src="https://github.com/Gu-nuu.png" width="80"></td>
+        <td align="center"><img src="https://github.com/leetaekyu2077.png" width="80"></td>
+    </tr>
+    <tr>
+        <td align="center"><a href="https://github.com/dongyeon-0822">DongYeon Kang</a></td>
+        <td align="center"><a href="https://github.com/HyewonKkang">Hyewon Kang</a></td>
+        <td align="center"><a href="https://github.com/Gu-nuu">Gunwoo Kim</a></td>
+        <td align="center"><a href="https://github.com/leetaekyu2077">Taekyu Lee</a></td>
+    </tr>
+</table>
